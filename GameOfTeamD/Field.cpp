@@ -76,3 +76,23 @@ void Field::Draw() const
 Field::~Field()
 {
 }
+
+int32 Field::Height() const
+{
+	return m_field_height;
+}
+
+int32 Field::PuzzleWidth() const
+{
+	return m_puzzle_width;
+}
+
+int32 Field::PlayerWidth() const
+{
+	return m_player_width;
+}
+
+int32 Field::Zk() const
+{
+	return m_zk;
+}

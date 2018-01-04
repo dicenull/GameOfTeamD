@@ -11,6 +11,11 @@ public:
 	void operator=(const Field& other);
 	~Field();
 
+	int32 Height() const;
+	int32 PuzzleWidth() const;
+	int32 PlayerWidth() const;
+	int32 Zk() const;
+
 public:
 	void Draw() const;
 
