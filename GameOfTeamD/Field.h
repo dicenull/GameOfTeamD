@@ -7,10 +7,12 @@ class Field
 {
 public:
 	Field(Size size, int32 field_height = 8, int32 puzzle_width = 10, int32 player_width = 3, int32 zk_size = 25);
+	Field(const Field& other);
+	void operator=(const Field& other);
 	~Field();
 
 public:
-	void Draw();
+	void Draw() const;
 
 
 private:

@@ -17,7 +17,29 @@ Field::Field(Size size, int32 field_height, int32 puzzle_width, int32 player_wid
 
 }
 
-void Field::Draw()
+Field::Field(const Field & other)
+{
+	m_window_size = other.m_window_size;
+	m_player_width = other.m_player_width;
+	m_puzzle_width = other.m_puzzle_width;
+	m_field_height = other.m_field_height;
+	m_p1_puzzles = other.m_p1_puzzles;
+	m_p2_puzzles = other.m_p2_puzzles;
+	m_zk = other.m_zk;
+}
+
+void Field::operator=(const Field & other)
+{
+	m_window_size = other.m_window_size;
+	m_player_width = other.m_player_width;
+	m_puzzle_width = other.m_puzzle_width;
+	m_field_height = other.m_field_height;
+	m_p1_puzzles = other.m_p1_puzzles;
+	m_p2_puzzles = other.m_p2_puzzles;
+	m_zk = other.m_zk;
+}
+
+void Field::Draw() const
 {
 	// ògê¸Çï`âÊ
 	int32 f_height = m_field_height * m_zk;
