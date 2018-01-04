@@ -2,13 +2,14 @@
 # include <Siv3D.hpp>
 #include <HamFramework.hpp>
 #include "Field.h"
+#include "Player.h"
 
 struct CommonData
 {
 	Field field{ Window::Size() };
 	Stopwatch timer;
-	Font font{ 30 };
-	int point[2];
+	Font font{ 25 };
+	Player players[2];
 };
 
 using MyApp = SceneManager<String, CommonData>;
@@ -41,13 +42,18 @@ public:
 
 	void update() override
 	{
-
 	}
 
 	void draw() const override
 	{
 		m_data->field.Draw();
+
+		// タイムを描画
 		m_data->font(L"Time : ", m_data->timer.s(), L"[s]").drawCenter(Window::Center());
+		// プレイヤー1のスコアを描画
+		m_data->font(m_data->players[0].Point()).drawCenter(Point(Window::Center().x / 5.0, Window::Center().y));
+		// プレイヤー2のスコアを描画
+		m_data->font(m_data->players[1].Point()).drawCenter(Point(Window::Size().x - Window::Size().x / 5.0, Window::Center().y));
 	}
 };
 

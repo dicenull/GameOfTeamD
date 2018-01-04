@@ -6,5 +6,11 @@ class Player :
 public:
 	Player();
 	virtual ~Player();
+
+public:
+	int Point();
+
+private:
+	int m_point;
 };
 

@@ -6,9 +6,11 @@ template <class Type>
 class Character
 {
 public:
-	Character();
-	Character(double speed);
+	Character(double speed = 1.0);
 	virtual ~Character();
+
+public:
+	double Speed();
 
 public:
 	Type Shape;
@@ -17,19 +19,19 @@ private:
 	double m_speed;
 };
 
-template <class Type>
-Character<Type>::Character()
-{
-	Shape = Type();
-}
-
 template<class Type>
 Character<Type>::Character(double speed)
-	: Character<Type>::Character()
 {
+	Shape = Type();
 	m_speed = speed;
 }
 
 template<class Type>
 Character<Type>::~Character()
 {}
+
+template<class Type>
+inline double Character<Type>::Speed()
+{
+	return m_speed;
+}
