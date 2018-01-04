@@ -9,5 +9,6 @@ void Main()
 
 	while (System::Update())
 	{
+		my_field.Draw();
 	}
 }

@@ -1,12 +1,16 @@
 #pragma once
 
 #include <Siv3D.hpp>
+#include <vector>
 
 class Field
 {
 public:
-	Field(Size size, int32 field_height = 8, int32 puzzle_width = 10, int32 player_width = 3, int32 zk_size = 10);
+	Field(Size size, int32 field_height = 8, int32 puzzle_width = 10, int32 player_width = 3, int32 zk_size = 20);
 	~Field();
+
+public:
+	void Draw();
 
 private:
 	/// <summary>
@@ -33,5 +37,7 @@ private:
 	/// 1[zk]‚ ‚½‚è‚Ì‘å‚«‚³
 	/// </summary>
 	int32 m_zk;
+
+	std::vector<std::vector<Rect>> m_puzzles;
 };
 
