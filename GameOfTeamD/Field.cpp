@@ -42,19 +42,17 @@ void Field::operator=(const Field & other)
 void Field::Draw() const
 {
 	// 枠線を描画
-	int32 f_height = m_field_height * m_zk;
-	int32 f1_width = (m_puzzle_width + m_player_width) * m_zk;
-	int32 f2_width = m_window_size.x - f1_width;
+	int32 f2_width = m_window_size.x - Width();
 	Color f_color = Palette::Darkgreen;
 	Color p_color = Palette::Hotpink;
 
 	// スコア表示部とフィールドの境界線
-	Line(0, f_height, m_window_size.x, f_height).draw(3.0, f_color);
-	Line(0, m_window_size.y - f_height, m_window_size.x, m_window_size.y - f_height).draw(3.0, f_color);
+	Line(0, Height(), m_window_size.x, Height()).draw(3.0, f_color);
+	Line(0, m_window_size.y - Height(), m_window_size.x, m_window_size.y - Height()).draw(3.0, f_color);
 
 	// プレイヤーフィールドの境界線
-	Line(f1_width, 0, f1_width, f_height).draw(2.0, p_color);
-	Line(f2_width, m_window_size.y - f_height, f2_width, m_window_size.y).draw(2.0, p_color);
+	Line(Width(), 0, Width(), Height()).draw(2.0, p_color);
+	Line(f2_width, m_window_size.y - Height(), f2_width, m_window_size.y).draw(2.0, p_color);
 
 	// パズルフィールドを描画
 	for (int w = 0; w < m_puzzle_width; w++)
@@ -77,22 +75,71 @@ Field::~Field()
 {
 }
 
-int32 Field::Height() const
+inline int32 Field::Height() const
 {
-	return m_field_height;
+	return m_field_height * m_zk;
 }
 
-int32 Field::PuzzleWidth() const
+inline int32 Field::Width() const
 {
-	return m_puzzle_width;
+	return (m_puzzle_width + m_player_width) * m_zk;
 }
 
-int32 Field::PlayerWidth() const
+inline int32 Field::PuzzleWidth() const
 {
-	return m_player_width;
+	return m_puzzle_width * m_zk;
 }
 
-int32 Field::Zk() const
+inline int32 Field::PlayerWidth() const
+{
+	return m_player_width * m_zk;
+}
+
+inline int32 Field::Zk() const
 {
 	return m_zk;
+}
+
+bool Field::IsInPuzzleField(Players p, Point pos) const
+{
+	switch (p)
+	{
+	case Players::One:
+		return (0 <= pos.x && pos.x <= PuzzleWidth()) && (0 <= pos.y && pos.y <= Height());
+	case Players::Two:
+		return (m_window_size.x - PuzzleWidth() <= pos.x && pos.x <= m_window_size.x)
+			&& (m_window_size.y - Height() <= pos.y && pos.y <= m_window_size.y);
+	default:
+		return false;
+	}
+}
+
+bool Field::IsInPlayerField(Players p, Point pos) const 
+{
+	switch (p)
+	{
+	case Players::One:
+		return (PuzzleWidth() <= pos.x && pos.x <= Field::Width())
+			&& (0 <= pos.y && pos.y <= Field::Height());
+	case Players::Two:
+		return (m_window_size.x - Field::Width() <= pos.x && pos.x <= m_window_size.x - PuzzleWidth()) 
+			&& (m_window_size.y - Height() <= pos.y && pos.y <= m_window_size.y);
+	default:
+		return false;
+	}
+}
+
+bool Field::IsInOtherField(Players p, Point pos)const
+{
+	switch (p)
+	{
+	case Players::One:
+		return (Width() <= pos.x && pos.x <= m_window_size.x) 
+			&& (0 <= pos.y && pos.y <= Field::Height());
+	case Players::Two:
+		return (0 <= pos.x && pos.x <= m_window_size.x - Width())
+			&& (m_window_size.y - Height() <= pos.y && pos.y <= m_window_size.y);
+	default:
+		return false;
+	}
 }

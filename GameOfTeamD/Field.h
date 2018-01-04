@@ -3,6 +3,11 @@
 #include <Siv3D.hpp>
 #include <vector>
 
+enum Players
+{
+	One, Two
+};
+
 class Field
 {
 public:
@@ -11,14 +16,18 @@ public:
 	void operator=(const Field& other);
 	~Field();
 
+public:
+	void Draw() const;
+
 	int32 Height() const;
+	int32 Width() const;
 	int32 PuzzleWidth() const;
 	int32 PlayerWidth() const;
 	int32 Zk() const;
 
-public:
-	void Draw() const;
-
+	bool IsInPuzzleField(Players p, Point pos) const;
+	bool IsInPlayerField(Players p, Point pos) const;
+	bool IsInOtherField(Players p, Point pos) const;
 
 private:
 	/// <summary>
