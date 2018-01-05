@@ -3,6 +3,7 @@
 #include <HamFramework.hpp>
 #include "Field.h"
 #include "Player.h"
+#include "Block.h"
 
 struct CommonData
 {
@@ -38,6 +39,7 @@ public:
 	void init() override
 	{
 		m_data->timer.start();
+
 	}
 
 	void update() override
@@ -54,8 +56,8 @@ public:
 		m_data->font(m_data->players[0].Point()).drawCenter(Point(Window::Center().x / 5.0, Window::Center().y));
 		// プレイヤー2のスコアを描画
 		m_data->font(m_data->players[1].Point()).drawCenter(Point(Window::Size().x - Window::Size().x / 5.0, Window::Center().y));
-
 	}
+
 };
 
 class Result : public MyApp::Scene

@@ -95,7 +95,7 @@ inline int32 Field::PlayerWidth() const
 	return m_player_width * m_zk;
 }
 
-inline int32 Field::Zk() const
+int32 Field::Zk() const
 {
 	return m_zk;
 }
