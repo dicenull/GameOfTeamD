@@ -1,12 +1,7 @@
 #pragma once
 
 #include <Siv3D.hpp>
-#include <vector>
-
-enum Players
-{
-	One, Two
-};
+#include "PlayerLib.h"
 
 class Field
 {
@@ -55,7 +50,7 @@ private:
 	/// </summary>
 	int32 m_zk;
 
-	std::vector<std::vector<Rect>> m_p1_puzzles;
-	std::vector<std::vector<Rect>> m_p2_puzzles;
+	Grid<Rect> m_p1_puzzles;
+	Grid<Rect> m_p2_puzzles;
 };
 

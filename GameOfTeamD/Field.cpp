@@ -1,7 +1,6 @@
 #include "Field.h"
 
 #include <Siv3D.hpp>
-#include <vector>
 
 Field::Field(Size size, int32 field_height, int32 puzzle_width, int32 player_width, int32 zk_size)
 {
@@ -12,8 +11,8 @@ Field::Field(Size size, int32 field_height, int32 puzzle_width, int32 player_wid
 	m_zk = zk_size;
 
 	// パズルのフィールドを初期化
-	m_p1_puzzles.resize(puzzle_width, std::vector<Rect>(field_height));
-	m_p2_puzzles.resize(puzzle_width, std::vector<Rect>(field_height));
+	m_p1_puzzles.resize(Size(puzzle_width, field_height));
+	m_p2_puzzles.resize(Size(puzzle_width, field_height));
 
 }
 
@@ -59,8 +58,8 @@ void Field::Draw() const
 	{
 		for (int h = 0; h < m_field_height; h++)
 		{
-			auto p1_puzzle = m_p1_puzzles[w][h];
-			auto p2_puzzle = m_p2_puzzles[w][h];
+			auto p1_puzzle = m_p1_puzzles[h][w];
+			auto p2_puzzle = m_p2_puzzles[h][w];
 
 			p1_puzzle.set(Point(m_zk * w, m_zk * h), Size(m_zk, m_zk));
 			p2_puzzle.set(Point(m_window_size.x - m_zk * (w + 1), m_window_size.y - m_zk * (h + 1)), Size(m_zk, m_zk));
@@ -75,22 +74,22 @@ Field::~Field()
 {
 }
 
-inline int32 Field::Height() const
+int32 Field::Height() const
 {
 	return m_field_height * m_zk;
 }
 
-inline int32 Field::Width() const
+int32 Field::Width() const
 {
 	return (m_puzzle_width + m_player_width) * m_zk;
 }
 
-inline int32 Field::PuzzleWidth() const
+int32 Field::PuzzleWidth() const
 {
 	return m_puzzle_width * m_zk;
 }
 
-inline int32 Field::PlayerWidth() const
+int32 Field::PlayerWidth() const
 {
 	return m_player_width * m_zk;
 }
