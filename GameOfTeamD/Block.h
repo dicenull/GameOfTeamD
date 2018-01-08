@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Siv3D.hpp>
+#include "PlayerLib.h"
 
 class Block
 {
@@ -14,12 +15,15 @@ public:
 	static int Max();
 	void TurnRight();
 	void TurnLeft();
-	void Flip();
+	void SetPos(const Point &pos);
 
-	void Draw(int w, int h, int32 zk) const;
+	void Move(Players p);
+
+	void Draw(int32 zk) const;
 
 private:
 	static const int length = 2;
 	Grid<Color> m_pieces{ length, length };
+	Point m_pos;
 };
 
