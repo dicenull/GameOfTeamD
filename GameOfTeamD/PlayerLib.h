@@ -1,7 +1,6 @@
 #pragma once
 
-enum Players
+enum class Players
 {
 	One, Two
 };
-
