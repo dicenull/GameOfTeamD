@@ -14,6 +14,7 @@ public:
 
 public:
 	void Draw() const;
+	void Update();
 
 	int32 Height() const;
 	int32 Width() const;
@@ -33,6 +34,8 @@ public:
 	bool IsInField(Players p, Point pos) const;
 
 private:
+	Point m_window = Window::Size();
+
 	/// <summary>
 	/// プレイヤー一人分のフィールドの高さ[zk]
 	/// </summary>

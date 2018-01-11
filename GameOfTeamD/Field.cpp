@@ -1,5 +1,4 @@
 #include "Field.h"
-
 #include <Siv3D.hpp>
 
 Field::Field(int32 field_height, int32 puzzle_width, int32 player_width, int32 zk_size, std::map<Players, bool> is_mirrors)
@@ -32,23 +31,26 @@ void Field::operator=(const Field & other)
 	m_zk = other.m_zk;
 }
 
+void Field::Update()
+{
+	m_window = Window::Size();
+}
+
 void Field::Draw() const
 {
 	// 枠線を描画
-	Size window = Window::Size();
-	
-	int32 f2_width = window.x - Width();
+	int32 f2_width = m_window.x - Width();
 	Color f_color = Palette::Darkgreen;
 	Color p_color = Palette::Hotpink;
 	Color l_color = Palette::Lightgrey;
 
 	// スコア表示部とフィールドの境界線
-	Line(0, Height(), window.x, Height()).draw(3.0, f_color);
-	Line(0, m_window_size.y - Height(), m_window_size.x, m_window_size.y - Height()).draw(3.0, f_color);
+	Line(0, Height(), m_window.x, Height()).draw(3.0, f_color);
+	Line(0, m_window.y - Height(), m_window.x, m_window.y - Height()).draw(3.0, f_color);
 
 	// プレイヤーフィールドの境界線
 	Line(Width(), 0, Width(), Height()).draw(2.0, p_color);
-	Line(f2_width, m_window_size.y - Height(), f2_width, m_window_size.y).draw(2.0, p_color);
+	Line(f2_width, m_window.y - Height(), f2_width, m_window.y).draw(2.0, p_color);
 
 	// パズルフィールドを描画
 	for (int w = 0; w < m_puzzle_width; w++)
@@ -59,7 +61,7 @@ void Field::Draw() const
 			auto p2_puzzle = m_p2_puzzles[h][w];
 
 			p1_puzzle.set(Point(m_zk * w, m_zk * h), Size(m_zk, m_zk));
-			p2_puzzle.set(Point(m_window_size.x - m_zk * (w + 1), m_window_size.y - m_zk * (h + 1)), Size(m_zk, m_zk));
+			p2_puzzle.set(Point(m_window.x - m_zk * (w + 1), m_window.y - m_zk * (h + 1)), Size(m_zk, m_zk));
 
 			p1_puzzle.drawFrame();
 			p2_puzzle.drawFrame();
@@ -69,8 +71,8 @@ void Field::Draw() const
 	// パズルが移動してくるフィールドの補助線
 	for (int h = 1; h < m_field_height; h++)
 	{
-		Line(Vec2(PuzzleWidth(), h * m_zk), Vec2(m_window_size.x, h * m_zk)).draw(1, l_color);
-		Line(Vec2(0, m_window_size.y - m_zk * h), Vec2(m_window_size.x - PuzzleWidth(), m_window_size.y - m_zk * h)).draw(1, l_color);
+		Line(Vec2(PuzzleWidth(), h * m_zk), Vec2(m_window.x, h * m_zk)).draw(1, l_color);
+		Line(Vec2(0, m_window.y - m_zk * h), Vec2(m_window.x - PuzzleWidth(), m_window.y - m_zk * h)).draw(1, l_color);
 	}
 }
 
@@ -105,29 +107,82 @@ int32 Field::Zk() const
 
 Point Field::PuzzleOrigin(Players p) const
 {
-	return Point();
+	switch (p)
+	{
+	case Players::One:
+		if (m_is_mirror.at(p))
+		{
+			return Point(m_window.x, 0);
+		}
+		else
+		{
+			return Point(0, 0);
+		}
+	case Players::Two:
+		if (m_is_mirror.at(p))
+		{
+			return Point(m_window.x, m_window.y - Height());
+		}
+		else
+		{
+			return Point(0, m_window.y - Height());
+		}
+	}
 }
 
 Point Field::PlayerOrigin(Players p) const
 {
-	return Point();
+	switch (p)
+	{
+	case Players::One:
+		if (m_is_mirror.at(p))
+		{
+			return Point(m_window.x - PuzzleWidth(), 0);
+		}
+		else
+		{
+			return Point(PuzzleWidth(), 0);
+		}
+	case Players::Two:
+		if (m_is_mirror.at(p))
+		{
+			return Point(m_window.x - PuzzleWidth(), m_window.y - Height());
+		}
+		else
+		{
+			return Point(PuzzleWidth(), m_window.y - Height());
+		}
+	}
 }
 
 Point Field::OtherOrigin(Players p) const
 {
-	return Point();
+	switch (p)
+	{
+	case Players::One:
+		if (m_is_mirror.at(p))
+		{
+			return Point(m_window.x - Width(), 0);
+		}
+		else
+		{
+			return Point(Width(), 0);
+		}
+	case Players::Two:
+		if (m_is_mirror.at(p))
+		{
+			return Point(m_window.x - Width(), m_window.y - Height());
+		}
+		else
+		{
+			return Point(Width(), m_window.y - Height());
+		}
+	}
 }
 
 void Field::SetMirror(Players p, bool is_mirror)
 {
-	switch (p)
-	{
-	case Players::One:
-		m_is_mirror[0] = is_mirror;
-		break;
-	case Players::Two:
-		m_is_mirror[1] = is_mirror;
-	}
+	m_is_mirror[p] = is_mirror;
 }
 
 bool Field::IsInPuzzleField(Players p, Point pos) const
@@ -137,8 +192,8 @@ bool Field::IsInPuzzleField(Players p, Point pos) const
 	case Players::One:
 		return (0 <= pos.x && pos.x <= PuzzleWidth()) && (0 <= pos.y && pos.y <= Height());
 	case Players::Two:
-		return (m_window_size.x - PuzzleWidth() <= pos.x && pos.x <= m_window_size.x)
-			&& (m_window_size.y - Height() <= pos.y && pos.y <= m_window_size.y);
+		return (m_window.x - PuzzleWidth() <= pos.x && pos.x <= m_window.x)
+			&& (m_window.y - Height() <= pos.y && pos.y <= m_window.y);
 	default:
 		return false;
 	}
@@ -152,8 +207,8 @@ bool Field::IsInPlayerField(Players p, Point pos) const
 		return (PuzzleWidth() <= pos.x && pos.x <= Field::Width())
 			&& (0 <= pos.y && pos.y <= Field::Height());
 	case Players::Two:
-		return (m_window_size.x - Field::Width() <= pos.x && pos.x <= m_window_size.x - PuzzleWidth()) 
-			&& (m_window_size.y - Height() <= pos.y && pos.y <= m_window_size.y);
+		return (m_window.x - Field::Width() <= pos.x && pos.x <= m_window.x - PuzzleWidth()) 
+			&& (m_window.y - Height() <= pos.y && pos.y <= m_window.y);
 	default:
 		return false;
 	}
@@ -164,11 +219,11 @@ bool Field::IsInOtherField(Players p, Point pos)const
 	switch (p)
 	{
 	case Players::One:
-		return (Width() <= pos.x && pos.x <= m_window_size.x) 
+		return (Width() <= pos.x && pos.x <= m_window.x) 
 			&& (0 <= pos.y && pos.y <= Field::Height());
 	case Players::Two:
-		return (0 <= pos.x && pos.x <= m_window_size.x - Width())
-			&& (m_window_size.y - Height() <= pos.y && pos.y <= m_window_size.y);
+		return (0 <= pos.x && pos.x <= m_window.x - Width())
+			&& (m_window.y - Height() <= pos.y && pos.y <= m_window.y);
 	default:
 		return false;
 	}
