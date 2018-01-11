@@ -6,7 +6,8 @@
 class Field
 {
 public:
-	Field(Size size, int32 field_height = 8, int32 puzzle_width = 10, int32 player_width = 3, int32 zk_size = 25);
+	Field(int32 field_height = 8, int32 puzzle_width = 10, int32 player_width = 3, int32 zk_size = 25,
+		std::map<Players, bool> is_mirrors = { {Players::One, false}, {Players::Two, true } });
 	Field(const Field& other);
 	void operator=(const Field& other);
 	~Field();
@@ -20,16 +21,18 @@ public:
 	int32 PlayerWidth() const;
 	int32 Zk() const;
 
+	Point PuzzleOrigin(Players p) const;
+	Point PlayerOrigin(Players p) const;
+	Point OtherOrigin(Players p) const;
+
+	void SetMirror(Players p, bool is_mirror);
+
 	bool IsInPuzzleField(Players p, Point pos) const;
 	bool IsInPlayerField(Players p, Point pos) const;
 	bool IsInOtherField(Players p, Point pos) const;
+	bool IsInField(Players p, Point pos) const;
 
 private:
-	/// <summary>
-	/// ウィンドウのサイズ
-	/// </summary>
-	Size m_window_size;
-
 	/// <summary>
 	/// プレイヤー一人分のフィールドの高さ[zk]
 	/// </summary>
@@ -52,5 +55,7 @@ private:
 
 	Grid<Rect> m_p1_puzzles;
 	Grid<Rect> m_p2_puzzles;
+
+	std::map<Players, bool> m_is_mirror;
 };
 

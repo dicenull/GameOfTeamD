@@ -2,9 +2,8 @@
 
 #include <Siv3D.hpp>
 
-Field::Field(Size size, int32 field_height, int32 puzzle_width, int32 player_width, int32 zk_size)
+Field::Field(int32 field_height, int32 puzzle_width, int32 player_width, int32 zk_size, std::map<Players, bool> is_mirrors)
 {
-	m_window_size = size;
 	m_field_height = field_height;
 	m_puzzle_width = puzzle_width;
 	m_player_width = player_width;
@@ -14,22 +13,17 @@ Field::Field(Size size, int32 field_height, int32 puzzle_width, int32 player_wid
 	m_p1_puzzles.resize(Size(puzzle_width, field_height));
 	m_p2_puzzles.resize(Size(puzzle_width, field_height));
 
+	m_is_mirror[Players::One] = is_mirrors[Players::One];
+	m_is_mirror[Players::Two] = is_mirrors[Players::Two];
 }
 
 Field::Field(const Field & other)
-{
-	m_window_size = other.m_window_size;
-	m_player_width = other.m_player_width;
-	m_puzzle_width = other.m_puzzle_width;
-	m_field_height = other.m_field_height;
-	m_p1_puzzles = other.m_p1_puzzles;
-	m_p2_puzzles = other.m_p2_puzzles;
-	m_zk = other.m_zk;
-}
+	: Field::Field(other.m_player_width, other.m_puzzle_width, other.m_player_width, other.m_zk,
+		other.m_is_mirror)
+{ }
 
 void Field::operator=(const Field & other)
 {
-	m_window_size = other.m_window_size;
 	m_player_width = other.m_player_width;
 	m_puzzle_width = other.m_puzzle_width;
 	m_field_height = other.m_field_height;
@@ -41,12 +35,15 @@ void Field::operator=(const Field & other)
 void Field::Draw() const
 {
 	// 枠線を描画
-	int32 f2_width = m_window_size.x - Width();
+	Size window = Window::Size();
+	
+	int32 f2_width = window.x - Width();
 	Color f_color = Palette::Darkgreen;
 	Color p_color = Palette::Hotpink;
+	Color l_color = Palette::Lightgrey;
 
 	// スコア表示部とフィールドの境界線
-	Line(0, Height(), m_window_size.x, Height()).draw(3.0, f_color);
+	Line(0, Height(), window.x, Height()).draw(3.0, f_color);
 	Line(0, m_window_size.y - Height(), m_window_size.x, m_window_size.y - Height()).draw(3.0, f_color);
 
 	// プレイヤーフィールドの境界線
@@ -67,6 +64,13 @@ void Field::Draw() const
 			p1_puzzle.drawFrame();
 			p2_puzzle.drawFrame();
 		}
+	}
+
+	// パズルが移動してくるフィールドの補助線
+	for (int h = 1; h < m_field_height; h++)
+	{
+		Line(Vec2(PuzzleWidth(), h * m_zk), Vec2(m_window_size.x, h * m_zk)).draw(1, l_color);
+		Line(Vec2(0, m_window_size.y - m_zk * h), Vec2(m_window_size.x - PuzzleWidth(), m_window_size.y - m_zk * h)).draw(1, l_color);
 	}
 }
 
@@ -97,6 +101,33 @@ int32 Field::PlayerWidth() const
 int32 Field::Zk() const
 {
 	return m_zk;
+}
+
+Point Field::PuzzleOrigin(Players p) const
+{
+	return Point();
+}
+
+Point Field::PlayerOrigin(Players p) const
+{
+	return Point();
+}
+
+Point Field::OtherOrigin(Players p) const
+{
+	return Point();
+}
+
+void Field::SetMirror(Players p, bool is_mirror)
+{
+	switch (p)
+	{
+	case Players::One:
+		m_is_mirror[0] = is_mirror;
+		break;
+	case Players::Two:
+		m_is_mirror[1] = is_mirror;
+	}
 }
 
 bool Field::IsInPuzzleField(Players p, Point pos) const
@@ -141,4 +172,9 @@ bool Field::IsInOtherField(Players p, Point pos)const
 	default:
 		return false;
 	}
+}
+
+bool Field::IsInField(Players p, Point pos) const
+{
+	return IsInPuzzleField(p, pos) || IsInPlayerField(p, pos) || IsInOtherField(p, pos);
 }

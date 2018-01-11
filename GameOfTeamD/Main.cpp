@@ -49,12 +49,12 @@ public:
 	{
 		if (Input::KeyB.clicked)
 		{
-			m_data->b_manager.CreateBlock(Players::One, m_i, m_data->b1);
+			m_data->b_manager.CreateBlock(Players::One, m_i, m_data->b1, m_data->field);
 
-			m_i = (m_i < m_data->field.Height() / m_data->field.Zk()) ? m_i + 1 : 0;
+			m_i = (m_i < m_data->field.Height() / m_data->field.Zk() - 2) ? m_i + 1 : 0;
 		}
 
-		m_data->b_manager.Update();
+		m_data->b_manager.Update(m_data->field);
 	}
 
 	void draw() const override
