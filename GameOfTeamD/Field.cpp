@@ -155,7 +155,7 @@ Point Field::PlayerOrigin(Players p) const
 	}
 }
 
-Point Field::OtherOrigin(Players p) const
+Point Field::SpaceOrigin(Players p) const
 {
 	switch (p)
 	{
@@ -214,7 +214,7 @@ bool Field::IsInPlayerField(Players p, Point pos) const
 	}
 }
 
-bool Field::IsInOtherField(Players p, Point pos)const
+bool Field::IsInSpaceField(Players p, Point pos)const
 {
 	switch (p)
 	{
@@ -231,5 +231,5 @@ bool Field::IsInOtherField(Players p, Point pos)const
 
 bool Field::IsInField(Players p, Point pos) const
 {
-	return IsInPuzzleField(p, pos) || IsInPlayerField(p, pos) || IsInOtherField(p, pos);
+	return IsInPuzzleField(p, pos) || IsInPlayerField(p, pos) || IsInSpaceField(p, pos);
 }

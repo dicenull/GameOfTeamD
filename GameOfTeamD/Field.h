@@ -24,13 +24,13 @@ public:
 
 	Point PuzzleOrigin(Players p) const;
 	Point PlayerOrigin(Players p) const;
-	Point OtherOrigin(Players p) const;
+	Point SpaceOrigin(Players p) const;
 
 	void SetMirror(Players p, bool is_mirror);
 
 	bool IsInPuzzleField(Players p, Point pos) const;
 	bool IsInPlayerField(Players p, Point pos) const;
-	bool IsInOtherField(Players p, Point pos) const;
+	bool IsInSpaceField(Players p, Point pos) const;
 	bool IsInField(Players p, Point pos) const;
 
 private:
