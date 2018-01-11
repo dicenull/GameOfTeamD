@@ -22,6 +22,11 @@ Block::~Block()
 	m_pieces.clear();
 }
 
+int Block::Length()
+{
+	return length;
+}
+
 Grid<Color> Block::GetColor() const
 {
 	return m_pieces;
@@ -65,6 +70,11 @@ void Block::TurnLeft()
 void Block::SetPos(const Point &pos)
 {
 	m_pos = pos;
+}
+
+Point Block::GetBottomLeft()
+{
+	return Point(m_pos.x, m_pos.y + (length - 1));
 }
 
 void Block::Move(Players p)

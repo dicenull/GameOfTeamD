@@ -10,12 +10,15 @@ public:
 	Block(Grid<Color> pieces);
 	~Block();
 
+	static int Length();
+
 public:
 	Grid<Color> GetColor() const;
 	static int Max();
 	void TurnRight();
 	void TurnLeft();
 	void SetPos(const Point &pos);
+	Point GetBottomLeft();
 
 	void Move(Players p);
 
