@@ -35,9 +35,9 @@ void BlockManager::Update(const Field & field)
 	{
 		Block& block = m_p1_blocks[i];
 
-		if (field.IsInField(One, block.GetBottomLeft()))
+		if (field.IsInField(Players::One, block.GetBottomLeft()))
 		{
-			block.Move(One);
+			block.Move(Players::One);
 		}
 		else
 		{
@@ -49,9 +49,9 @@ void BlockManager::Update(const Field & field)
 	{
 		Block& block = m_p2_blocks[i];
 
-		if (field.IsInField(Two, block.GetBottomLeft()))
+		if (field.IsInField(Players::Two, block.GetBottomLeft()))
 		{
-			block.Move(Two);
+			block.Move(Players::Two);
 		}
 		else
 		{

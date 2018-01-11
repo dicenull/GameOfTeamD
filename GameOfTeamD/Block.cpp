@@ -81,10 +81,10 @@ void Block::Move(Players p)
 {
 	switch (p)
 	{
-	case One:
+	case Players::One:
 		m_pos.moveBy(Point::Left);
 		break;
-	case Two:
+	case Players::Two:
 		m_pos.moveBy(Point::Right);
 		break;
 	default:
