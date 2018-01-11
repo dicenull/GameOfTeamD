@@ -11,8 +11,8 @@ public:
 	~BlockManager();
 
 public:
-	void CreateBlock(Players p, int height, Block block);
-	void Update();
+	void CreateBlock(Players p, int height, Block block, const Field & field);
+	void Update(const Field & field);
 	void DrawBlocks() const;
 
 private:

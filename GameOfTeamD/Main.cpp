@@ -4,6 +4,7 @@
 #include "Field.h"
 #include "Player.h"
 #include "Block.h"
+#include "BlockManager.h"
 
 struct CommonData
 {
@@ -11,6 +12,9 @@ struct CommonData
 	Stopwatch timer;
 	Font font{ 25 };
 	Player players[2];
+
+	BlockManager b_manager{ field.Zk() };
+	Block b1{ Grid<Color>(2, 2, Array<Color>({ Palette::White, Palette::Red, Palette::Blue, Palette::Green })) };
 };
 
 using MyApp = SceneManager<String, CommonData>;
@@ -39,15 +43,24 @@ public:
 	void init() override
 	{
 		m_data->timer.start();
-
 	}
 
 	void update() override
 	{
+		if (Input::KeyB.clicked)
+		{
+			m_data->b_manager.CreateBlock(Players::One, m_i, m_data->b1);
+
+			m_i = (m_i < m_data->field.Height() / m_data->field.Zk()) ? m_i + 1 : 0;
+		}
+
+		m_data->b_manager.Update();
 	}
 
 	void draw() const override
 	{
+		m_data->b1.Draw(m_data->field.Zk());
+
 		m_data->field.Draw();
 
 		// タイムを描画
@@ -56,8 +69,11 @@ public:
 		m_data->font(m_data->players[0].Point()).drawCenter(Point(Window::Center().x / 5.0, Window::Center().y));
 		// プレイヤー2のスコアを描画
 		m_data->font(m_data->players[1].Point()).drawCenter(Point(Window::Size().x - Window::Size().x / 5.0, Window::Center().y));
-	}
 
+		m_data->b_manager.DrawBlocks();
+	}
+private:
+	int m_i = 0;
 };
 
 class Result : public MyApp::Scene
