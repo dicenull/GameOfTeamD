@@ -8,7 +8,7 @@
 
 struct CommonData
 {
-	Field field{ Window::Size() };
+	Field field;
 	Stopwatch timer;
 	Font font{ 25 };
 	Player players[2];
