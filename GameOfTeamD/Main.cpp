@@ -55,6 +55,7 @@ public:
 		}
 
 		m_data->b_manager.Update(m_data->field);
+		m_data->field.Update();
 	}
 
 	void draw() const override
