@@ -26,6 +26,13 @@ public:
 	Point PlayerOrigin(Players p) const;
 	Point SpaceOrigin(Players p) const;
 
+	Point PuzzleEndPos(Players p) const;
+	Point PlayerEndPos(Players p) const;
+	Point SpaceEndPos(Players p) const;
+
+	Point FieldBottomLeft(Players p) const;
+	Point FieldBottomRight(Players p) const;
+
 	void SetMirror(Players p, bool is_mirror);
 
 	bool IsInPuzzleField(Players p, Point pos) const;

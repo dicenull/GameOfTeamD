@@ -39,19 +39,20 @@ void Field::Update()
 void Field::Draw() const
 {
 	// 枠線を描画
-	int32 f2_width = m_window.x - Width();
 	Color f_color = Palette::Darkgreen;
 	Color p_color = Palette::Hotpink;
 	Color l_color = Palette::Lightgrey;
+	Size size = Size(m_zk, m_zk);
 
 	// スコア表示部とフィールドの境界線
-	Line(0, Height(), m_window.x, Height()).draw(3.0, f_color);
-	Line(0, m_window.y - Height(), m_window.x, m_window.y - Height()).draw(3.0, f_color);
+	Line(FieldBottomLeft(Players::One), FieldBottomRight(Players::One)).draw(3.0, f_color);
+	Line({ 0, m_window.y - Height() }, { m_window.x, m_window.y - Height() }).draw(3.0, f_color);
 
 	// プレイヤーフィールドの境界線
-	Line(Width(), 0, Width(), Height()).draw(2.0, p_color);
-	Line(f2_width, m_window.y - Height(), f2_width, m_window.y).draw(2.0, p_color);
-
+	// todo
+	Line(SpaceOrigin(Players::One), PlayerEndPos(Players::One)).draw(2.0, p_color);
+	Line(SpaceOrigin(Players::Two), PlayerEndPos(Players::Two)).draw(2.0, p_color);
+	
 	// パズルフィールドを描画
 	for (int w = 0; w < m_puzzle_width; w++)
 	{
@@ -59,9 +60,25 @@ void Field::Draw() const
 		{
 			auto p1_puzzle = m_p1_puzzles[h][w];
 			auto p2_puzzle = m_p2_puzzles[h][w];
+			Point pos = Point(m_zk * w, m_zk * h);
 
-			p1_puzzle.set(Point(m_zk * w, m_zk * h), Size(m_zk, m_zk));
-			p2_puzzle.set(Point(m_window.x - m_zk * (w + 1), m_window.y - m_zk * (h + 1)), Size(m_zk, m_zk));
+			if (m_is_mirror.at(Players::One))
+			{
+				p1_puzzle.set(SpaceEndPos(Players::One) - pos - size, size);
+			}
+			else
+			{
+				p1_puzzle.set(PuzzleOrigin(Players::One) + pos, size);
+			}
+
+			if (m_is_mirror.at(Players::Two))
+			{
+				p2_puzzle.set(SpaceEndPos(Players::Two) - pos - size, size);
+			}
+			else
+			{
+				p2_puzzle.set(PuzzleOrigin(Players::Two) + pos, size);
+			}
 
 			p1_puzzle.drawFrame();
 			p2_puzzle.drawFrame();
@@ -177,6 +194,103 @@ Point Field::SpaceOrigin(Players p) const
 		{
 			return Point(Width(), m_window.y - Height());
 		}
+	}
+}
+
+Point Field::PuzzleEndPos(Players p) const
+{
+	switch (p)
+	{
+	case Players::One:
+		if (m_is_mirror.at(p))
+		{
+			return Point(m_window.x - PuzzleWidth(), Height());
+		}
+		else
+		{
+			return Point(PuzzleWidth(), Height());
+		}
+	case Players::Two:
+		if (m_is_mirror.at(p))
+		{
+			return Point(m_window.x - PuzzleWidth(), m_window.y);
+		}
+		else
+		{
+			return Point(PuzzleWidth(), m_window.y);
+		}
+	}
+}
+
+Point Field::PlayerEndPos(Players p) const
+{
+	switch (p)
+	{
+	case Players::One:
+		if (m_is_mirror.at(p))
+		{
+			return Point(m_window.x - Width(), Height());
+		}
+		else
+		{
+			return Point(Width(), Height());
+		}
+	case Players::Two:
+		if (m_is_mirror.at(p))
+		{
+			return Point(m_window.x - Width(), m_window.y);
+		}
+		else
+		{
+			return Point(Width(), m_window.y);
+		}
+	}
+}
+
+Point Field::SpaceEndPos(Players p) const
+{
+	switch (p)
+	{
+	case Players::One:
+		if (m_is_mirror.at(p))
+		{
+			return Point(0, Height());
+		}
+		else
+		{
+			return Point(m_window.x, Height());
+		}
+	case Players::Two:
+		if (m_is_mirror.at(p))
+		{
+			return Point(m_window.x, m_window.y);
+		}
+		else
+		{
+			return Point(0, m_window.y);
+		}
+	}
+}
+
+Point Field::FieldBottomLeft(Players p) const
+{
+	switch (p)
+	{
+	case Players::One:
+		return Point(0, Height());
+	case Players::Two:
+		return Point(0, m_window.x - Height());
+	}
+}
+
+Point Field::FieldBottomRight(Players p) const
+{
+	switch (p)
+	{
+	case Players::One:
+		return Point(m_window.x, Height());
+	case Players::Two:
+		return Point(m_window.x, m_window.y);
 	}
 }
 
