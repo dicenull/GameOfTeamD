@@ -213,7 +213,7 @@ Point Field::PuzzleEndPos(Players p) const
 	case Players::One:
 		if (m_is_mirror.at(p))
 		{
-			return Point(m_window.x - PuzzleWidth(), Height());
+			return Point(m_window.x, Height());
 		}
 		else
 		{
@@ -222,7 +222,7 @@ Point Field::PuzzleEndPos(Players p) const
 	case Players::Two:
 		if (m_is_mirror.at(p))
 		{
-			return Point(m_window.x - PuzzleWidth(), m_window.y);
+			return Point(m_window.x, m_window.y);
 		}
 		else
 		{
@@ -243,7 +243,7 @@ Point Field::PlayerEndPos(Players p) const
 	case Players::One:
 		if (m_is_mirror.at(p))
 		{
-			return Point(m_window.x - Width(), Height());
+			return Point(m_window.x - PuzzleWidth(), Height());
 		}
 		else
 		{
@@ -252,7 +252,7 @@ Point Field::PlayerEndPos(Players p) const
 	case Players::Two:
 		if (m_is_mirror.at(p))
 		{
-			return Point(m_window.x - Width(), m_window.y);
+			return Point(m_window.x - PuzzleWidth(), m_window.y);
 		}
 		else
 		{
@@ -273,7 +273,7 @@ Point Field::SpaceEndPos(Players p) const
 	case Players::One:
 		if (m_is_mirror.at(p))
 		{
-			return Point(0, Height());
+			return Point(m_window.x - Width(), Height());
 		}
 		else
 		{
@@ -282,11 +282,11 @@ Point Field::SpaceEndPos(Players p) const
 	case Players::Two:
 		if (m_is_mirror.at(p))
 		{
-			return Point(m_window.x, m_window.y);
+			return Point(m_window.x - Width(), m_window.y);
 		}
 		else
 		{
-			return Point(0, m_window.y);
+			return Point(m_window.x, m_window.y);
 		}
 	default:
 		return Point();
@@ -346,14 +346,7 @@ Point Field::PlayerTopBorder(Players p) const
 
 Point Field::PlayerCenter(Players p) const
 {
-	if (m_is_mirror.at(p))
-	{
-		return PlayerOrigin(p) + Point(-PlayerWidth() / 2, Height() / 2);
-	}
-	else
-	{
-		return PlayerOrigin(p) + Point(PlayerWidth() / 2, Height() / 2);
-	}
+	return PlayerOrigin(p) + Point(PlayerWidth() / 2, Height() / 2);
 }
 
 void Field::SetMirror(Players p, bool is_mirror)
@@ -363,46 +356,20 @@ void Field::SetMirror(Players p, bool is_mirror)
 
 bool Field::IsInPuzzleField(Players p, Point pos) const
 {
-	switch (p)
-	{
-	case Players::One:
-		return (0 <= pos.x && pos.x <= PuzzleWidth()) && (0 <= pos.y && pos.y <= Height());
-	case Players::Two:
-		return (m_window.x - PuzzleWidth() <= pos.x && pos.x <= m_window.x)
-			&& (m_window.y - Height() <= pos.y && pos.y <= m_window.y);
-	default:
-		return false;
-	}
+	return (PuzzleOrigin(p).x <= pos.x && pos.x <= PuzzleEndPos(p).x)
+		&& (PuzzleOrigin(p).y <= pos.y && pos.y <= PuzzleEndPos(p).y);
 }
 
 bool Field::IsInPlayerField(Players p, Point pos) const 
 {
-	switch (p)
-	{
-	case Players::One:
-		return (PuzzleWidth() <= pos.x && pos.x <= Field::Width())
-			&& (0 <= pos.y && pos.y <= Field::Height());
-	case Players::Two:
-		return (m_window.x - Field::Width() <= pos.x && pos.x <= m_window.x - PuzzleWidth()) 
-			&& (m_window.y - Height() <= pos.y && pos.y <= m_window.y);
-	default:
-		return false;
-	}
+	return (PlayerOrigin(p).x <= pos.x && pos.x <= PlayerEndPos(p).x)
+		&& (PlayerOrigin(p).y <= pos.y && pos.y <= PlayerEndPos(p).y);
 }
 
 bool Field::IsInSpaceField(Players p, Point pos)const
 {
-	switch (p)
-	{
-	case Players::One:
-		return (Width() <= pos.x && pos.x <= m_window.x) 
-			&& (0 <= pos.y && pos.y <= Field::Height());
-	case Players::Two:
-		return (0 <= pos.x && pos.x <= m_window.x - Width())
-			&& (m_window.y - Height() <= pos.y && pos.y <= m_window.y);
-	default:
-		return false;
-	}
+	return (SpaceOrigin(p).x <= pos.x && pos.x <= SpaceEndPos(p).x)
+		&& (SpaceOrigin(p).y <= pos.y && pos.y <= SpaceEndPos(p).y);
 }
 
 bool Field::IsInField(Players p, Point pos) const

@@ -82,7 +82,7 @@ public:
 		m_data->field.Draw();
 
 		// タイムを描画
-		m_data->font(L"Time : ", m_data->timer.s(), L"[s]").drawCenter(Window::Center());
+		// m_data->font(L"Time : ", m_data->timer.s(), L"[s]").drawCenter(Window::Center());
 		// プレイヤー1のスコアを描画
 		m_data->font(m_data->players[0].Score()).drawCenter(Point(Window::Center().x / 5.0, Window::Center().y));
 		// プレイヤー2のスコアを描画
@@ -92,6 +92,19 @@ public:
 
 		m_data->players[0].Shape.draw();
 		m_data->players[1].Shape.draw();
+
+		if (m_data->field.IsInPlayerField(Players::Two, Mouse::Pos()))
+		{
+			m_data->font(L"Player Field").drawCenter(Window::Center());
+		}
+		if (m_data->field.IsInPuzzleField(Players::Two, Mouse::Pos()))
+		{
+			m_data->font(L"Puzzle Field").drawCenter(Window::Center());
+		}
+		if (m_data->field.IsInSpaceField(Players::Two, Mouse::Pos()))
+		{
+			m_data->font(L"Space Field").drawCenter(Window::Center());
+		}
 	}
 private:
 	int m_i = 0;
