@@ -13,6 +13,8 @@ public:
 	///</summary>
 	Point Pos();
 
+	void SetPos(Point pos);
+
 	///<summary>
 	///プレイヤーの得点
 	///</summary>
