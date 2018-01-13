@@ -20,6 +20,7 @@ public:
 	int32 Width() const;
 	int32 PuzzleWidth() const;
 	int32 PlayerWidth() const;
+	int32 SpaceWidth() const;
 	int32 Zk() const;
 
 	Point PuzzleOrigin(Players p) const;
@@ -30,8 +31,12 @@ public:
 	Point PlayerEndPos(Players p) const;
 	Point SpaceEndPos(Players p) const;
 
-	Point FieldBottomLeft(Players p) const;
-	Point FieldBottomRight(Players p) const;
+	Point LeftBorder(Players p) const;
+	Point RightBorder(Players p) const;
+
+	Point PlayerTopBorder(Players p) const;
+
+	Point PlayerCenter(Players p) const;
 
 	void SetMirror(Players p, bool is_mirror);
 
@@ -65,7 +70,7 @@ private:
 
 	Grid<Rect> m_p1_puzzles;
 	Grid<Rect> m_p2_puzzles;
-
+	
 	std::map<Players, bool> m_is_mirror;
 };
 

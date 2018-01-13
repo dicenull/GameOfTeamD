@@ -2,5 +2,5 @@
 
 enum class Players
 {
-	One, Two
+	One = 0, Two = 1
 };

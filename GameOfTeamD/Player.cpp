@@ -2,16 +2,21 @@
 
 
 
-Player::Player()
+Player::Player(Point pos)
 {
-	m_point = 0;
+	this->Shape.setPos(pos);
 }
 
 
 Player::~Player()
 { }
 
-int Player::Point()
+Point Player::Pos()
 {
-	return m_point;
+	return Point(this->Shape.x, this->Shape.y);
+}
+
+int Player::Score()
+{
+	return m_score;
 }

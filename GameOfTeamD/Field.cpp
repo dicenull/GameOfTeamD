@@ -14,6 +14,7 @@ Field::Field(int32 field_height, int32 puzzle_width, int32 player_width, int32 z
 
 	m_is_mirror[Players::One] = is_mirrors[Players::One];
 	m_is_mirror[Players::Two] = is_mirrors[Players::Two];
+
 }
 
 Field::Field(const Field & other)
@@ -44,15 +45,22 @@ void Field::Draw() const
 	Color l_color = Palette::Lightgrey;
 	Size size = Size(m_zk, m_zk);
 
-	// スコア表示部とフィールドの境界線
-	Line(FieldBottomLeft(Players::One), FieldBottomRight(Players::One)).draw(3.0, f_color);
-	Line({ 0, m_window.y - Height() }, { m_window.x, m_window.y - Height() }).draw(3.0, f_color);
+	for (auto p : { Players::One, Players::Two })
+	{
 
-	// プレイヤーフィールドの境界線
-	// todo
-	Line(SpaceOrigin(Players::One), PlayerEndPos(Players::One)).draw(2.0, p_color);
-	Line(SpaceOrigin(Players::Two), PlayerEndPos(Players::Two)).draw(2.0, p_color);
-	
+		// スコア表示部とフィールドの境界線
+		Line(LeftBorder(p), RightBorder(p)).draw(3.0, f_color);
+		
+		// プレイヤーフィールドの境界線
+		Line(PlayerTopBorder(p), PlayerTopBorder(p) + Point(0, Height())).draw(2.0, p_color);
+
+		// パズルが移動してくるフィールドの補助線
+		for (int h = 1; h < m_field_height; h++)
+		{
+			Line(SpaceOrigin(p) + Point(0, h * m_zk), SpaceOrigin(p) + Point(SpaceWidth(), h * m_zk)).draw(1, l_color);
+		}
+	}
+
 	// パズルフィールドを描画
 	for (int w = 0; w < m_puzzle_width; w++)
 	{
@@ -62,34 +70,12 @@ void Field::Draw() const
 			auto p2_puzzle = m_p2_puzzles[h][w];
 			Point pos = Point(m_zk * w, m_zk * h);
 
-			if (m_is_mirror.at(Players::One))
-			{
-				p1_puzzle.set(SpaceEndPos(Players::One) - pos - size, size);
-			}
-			else
-			{
-				p1_puzzle.set(PuzzleOrigin(Players::One) + pos, size);
-			}
-
-			if (m_is_mirror.at(Players::Two))
-			{
-				p2_puzzle.set(SpaceEndPos(Players::Two) - pos - size, size);
-			}
-			else
-			{
-				p2_puzzle.set(PuzzleOrigin(Players::Two) + pos, size);
-			}
+			p1_puzzle.set(PuzzleOrigin(Players::One) + pos, size);
+			p2_puzzle.set(PuzzleOrigin(Players::Two) + pos, size);
 
 			p1_puzzle.drawFrame();
 			p2_puzzle.drawFrame();
 		}
-	}
-
-	// パズルが移動してくるフィールドの補助線
-	for (int h = 1; h < m_field_height; h++)
-	{
-		Line(Vec2(PuzzleWidth(), h * m_zk), Vec2(m_window.x, h * m_zk)).draw(1, l_color);
-		Line(Vec2(0, m_window.y - m_zk * h), Vec2(m_window.x - PuzzleWidth(), m_window.y - m_zk * h)).draw(1, l_color);
 	}
 }
 
@@ -117,37 +103,20 @@ int32 Field::PlayerWidth() const
 	return m_player_width * m_zk;
 }
 
+int32 Field::SpaceWidth() const
+{
+	return m_window.x - Width();
+}
+
 int32 Field::Zk() const
 {
 	return m_zk;
 }
 
+///<summary>
+///パズルフィールドの左上の座標
+///</summary>
 Point Field::PuzzleOrigin(Players p) const
-{
-	switch (p)
-	{
-	case Players::One:
-		if (m_is_mirror.at(p))
-		{
-			return Point(m_window.x, 0);
-		}
-		else
-		{
-			return Point(0, 0);
-		}
-	case Players::Two:
-		if (m_is_mirror.at(p))
-		{
-			return Point(m_window.x, m_window.y - Height());
-		}
-		else
-		{
-			return Point(0, m_window.y - Height());
-		}
-	}
-}
-
-Point Field::PlayerOrigin(Players p) const
 {
 	switch (p)
 	{
@@ -158,7 +127,7 @@ Point Field::PlayerOrigin(Players p) const
 		}
 		else
 		{
-			return Point(PuzzleWidth(), 0);
+			return Point(0, 0);
 		}
 	case Players::Two:
 		if (m_is_mirror.at(p))
@@ -167,12 +136,17 @@ Point Field::PlayerOrigin(Players p) const
 		}
 		else
 		{
-			return Point(PuzzleWidth(), m_window.y - Height());
+			return Point(0, m_window.y - Height());
 		}
+	default:
+		return Point();
 	}
 }
 
-Point Field::SpaceOrigin(Players p) const
+///<summary>
+///プレイヤーフィールドの左上の座標
+///</summary>
+Point Field::PlayerOrigin(Players p) const
 {
 	switch (p)
 	{
@@ -183,7 +157,7 @@ Point Field::SpaceOrigin(Players p) const
 		}
 		else
 		{
-			return Point(Width(), 0);
+			return Point(PuzzleWidth(), 0);
 		}
 	case Players::Two:
 		if (m_is_mirror.at(p))
@@ -192,11 +166,46 @@ Point Field::SpaceOrigin(Players p) const
 		}
 		else
 		{
-			return Point(Width(), m_window.y - Height());
+			return Point(PuzzleWidth(), m_window.y - Height());
 		}
+	default:
+		return Point();
 	}
 }
 
+///<summary>
+///宇宙フィールドの左上の座標
+///</summary>
+Point Field::SpaceOrigin(Players p) const
+{
+	switch (p)
+	{
+	case Players::One:
+		if (m_is_mirror.at(p))
+		{
+			return Point(0, 0);
+		}
+		else
+		{
+			return Point(Width(), 0);
+		}
+	case Players::Two:
+		if (m_is_mirror.at(p))
+		{
+			return Point(0, m_window.y - Height());
+		}
+		else
+		{
+			return Point(Width(), m_window.y - Height());
+		}
+	default:
+		return Point();
+	}
+}
+
+///<summary>
+///パズルフィールドの右下の座標
+///</summary>
 Point Field::PuzzleEndPos(Players p) const
 {
 	switch (p)
@@ -219,9 +228,14 @@ Point Field::PuzzleEndPos(Players p) const
 		{
 			return Point(PuzzleWidth(), m_window.y);
 		}
+	default:
+		return Point();
 	}
 }
 
+///<summary>
+///プレイヤーフィールドの右下の座標
+///</summary>
 Point Field::PlayerEndPos(Players p) const
 {
 	switch (p)
@@ -244,9 +258,14 @@ Point Field::PlayerEndPos(Players p) const
 		{
 			return Point(Width(), m_window.y);
 		}
+	default:
+		return Point();
 	}
 }
 
+///<summary>
+///宇宙フィールドの右下の座標
+///</summary>
 Point Field::SpaceEndPos(Players p) const
 {
 	switch (p)
@@ -269,28 +288,71 @@ Point Field::SpaceEndPos(Players p) const
 		{
 			return Point(0, m_window.y);
 		}
+	default:
+		return Point();
 	}
 }
 
-Point Field::FieldBottomLeft(Players p) const
+Point Field::LeftBorder(Players p) const
 {
 	switch (p)
 	{
 	case Players::One:
 		return Point(0, Height());
 	case Players::Two:
-		return Point(0, m_window.x - Height());
+		return Point(0, m_window.y - Height());
+	default:
+		return Point();
 	}
 }
 
-Point Field::FieldBottomRight(Players p) const
+Point Field::RightBorder(Players p) const
 {
 	switch (p)
 	{
 	case Players::One:
 		return Point(m_window.x, Height());
 	case Players::Two:
-		return Point(m_window.x, m_window.y);
+		return Point(m_window.x, m_window.y - Height());
+	default:
+		return Point();
+	}
+}
+
+Point Field::PlayerTopBorder(Players p) const
+{
+	switch (p)
+	{
+	case Players::One:
+		if (m_is_mirror.at(p))
+		{
+			return Point(m_window.x - Width(), 0);
+		}
+		else
+		{
+			return Point(Width(), 0 );
+		}
+	case Players::Two:
+		if (m_is_mirror.at(p))
+		{
+			return Point(m_window.x - Width(), m_window.y - Height());
+		}
+		else
+		{
+			return Point(Width(), m_window.y - Height());
+		}
+	}
+}
+
+Point Field::PlayerCenter(Players p) const
+{
+	if (m_is_mirror.at(p))
+	{
+		return PlayerOrigin(p) + Point(-PlayerWidth() / 2, Height() / 2);
+	}
+	else
+	{
+		return PlayerOrigin(p) + Point(PlayerWidth() / 2, Height() / 2);
 	}
 }
 

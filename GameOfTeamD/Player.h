@@ -4,13 +4,21 @@ class Player :
 	public Character<Circle>
 {
 public:
-	Player();
+	Player(Point pos);
 	virtual ~Player();
 
 public:
-	int Point();
+	///<summary>
+	///プレイヤーの場所
+	///</summary>
+	Point Pos();
+
+	///<summary>
+	///プレイヤーの得点
+	///</summary>
+	int Score();
 
 private:
-	int m_point;
+	int m_score;
 };
 
