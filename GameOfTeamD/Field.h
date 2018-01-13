@@ -45,6 +45,9 @@ public:
 	bool IsInSpaceField(Players p, Point pos) const;
 	bool IsInField(Players p, Point pos) const;
 
+	template <class Type>
+		bool IsInPlayerField(Players p, Type shape) const;
+
 private:
 	Point m_window = Window::Size();
 
@@ -74,3 +77,8 @@ private:
 	std::map<Players, bool> m_is_mirror;
 };
 
+template<class Type>
+bool Field::IsInPlayerField(Players p, Type shape) const
+{
+	return Rect(PlayerOrigin(p), Size(PlayerWidth(), Height())).contains(shape);
+}

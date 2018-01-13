@@ -2,9 +2,10 @@
 
 
 
-Player::Player(Point pos)
+Player::Player(Players p, Point pos)
 {
 	this->Shape.setPos(pos);
+	m_players = p;
 }
 
 
@@ -19,6 +20,32 @@ Point Player::Pos()
 void Player::SetPos(Point pos)
 {
 	this->Shape.setPos(pos);
+}
+
+void Player::Move(Action action, const Field & field)
+{
+	Vec2 v = Vec2::Zero;
+
+	switch (action)
+	{
+	case Action::Up:
+		v = { 0, -Speed() };
+		break;
+	case Action::Right:
+		v = { Speed(), 0 };
+		break;
+	case Action::Down:
+		v = { 0, Speed() };
+		break;
+	case Action::Left:
+		v = { -Speed(), 0 };
+		break;
+	}
+	
+	if (field.IsInPlayerField(m_players, this->Shape.movedBy(v)))
+	{
+		this->Shape.moveBy(v);
+	}
 }
 
 int Player::Score()

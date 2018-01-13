@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "Block.h"
 #include "BlockManager.h"
+#include "Action.h"
 
 struct CommonData
 {
@@ -12,7 +13,7 @@ struct CommonData
 	Stopwatch timer;
 	Font font{ 25 };
 	// プレイヤーフィールドの中心にプレイヤーの位置を設定する
-	Player players[2] = { {field.PlayerCenter(Players::One)}, {field.PlayerCenter(Players::Two)} };
+	Player players[2] = { {Players::One, field.PlayerCenter(Players::One)}, {Players::Two, field.PlayerCenter(Players::Two)} };
 
 	BlockManager b_manager{ field.Zk() };
 	Block b1{ Grid<Color>(2, 2, Array<Color>({ Palette::White, Palette::Red, Palette::Blue, Palette::Green })) };
@@ -60,6 +61,7 @@ public:
 			m_i = (m_i < m_data->field.Height() / m_data->field.Zk() - 2) ? m_i + 1 : 0;
 		}
 
+		// フィールドの向きを反転し、プレイヤーの位置を戻す
 		if (Input::KeyF.clicked)
 		{
 			m_data->field.SetMirror(Players::One, true);
@@ -77,6 +79,19 @@ public:
 			m_data->players[1].SetPos(m_data->field.PlayerCenter(Players::Two));
 		}
 
+		// プレイヤー1の操作
+		if (Input::KeyRight.pressed || Gamepad(0).button(4).pressed) m_data->players[0].Move(Action::Right, m_data->field);
+		if (Input::KeyUp.pressed || Gamepad(0).button(3).pressed) m_data->players[0].Move(Action::Up, m_data->field);
+		if (Input::KeyLeft.pressed || Gamepad(0).button(1).pressed) m_data->players[0].Move(Action::Left, m_data->field);
+		if (Input::KeyDown.pressed || Gamepad(0).button(2).pressed) m_data->players[0].Move(Action::Down, m_data->field);
+
+		// プレイヤー2の操作
+		if (Input::KeyD.pressed) m_data->players[1].Move(Action::Right, m_data->field);
+		if (Input::KeyW.pressed) m_data->players[1].Move(Action::Up, m_data->field);
+		if (Input::KeyA.pressed) m_data->players[1].Move(Action::Left, m_data->field);
+		if (Input::KeyS.pressed) m_data->players[1].Move(Action::Down, m_data->field);
+
+		// ブロックを動かす
 		m_data->b_manager.Update(m_data->field);
 		m_data->field.Update();
 	}
@@ -88,7 +103,7 @@ public:
 		m_data->field.Draw();
 
 		// タイムを描画
-		// m_data->font(L"Time : ", m_data->timer.s(), L"[s]").drawCenter(Window::Center());
+		m_data->font(L"Time : ", m_data->timer.s(), L"[s]").drawCenter(Window::Center());
 		// プレイヤー1のスコアを描画
 		m_data->font(m_data->players[0].Score()).drawCenter(Point(Window::Center().x / 5.0, Window::Center().y));
 		// プレイヤー2のスコアを描画
@@ -96,21 +111,9 @@ public:
 
 		m_data->b_manager.DrawBlocks();
 
+		// プレイヤーを描画
 		m_data->players[0].Shape.draw();
 		m_data->players[1].Shape.draw();
-
-		if (m_data->field.IsInPlayerField(Players::Two, Mouse::Pos()))
-		{
-			m_data->font(L"Player Field").drawCenter(Window::Center());
-		}
-		if (m_data->field.IsInPuzzleField(Players::Two, Mouse::Pos()))
-		{
-			m_data->font(L"Puzzle Field").drawCenter(Window::Center());
-		}
-		if (m_data->field.IsInSpaceField(Players::Two, Mouse::Pos()))
-		{
-			m_data->font(L"Space Field").drawCenter(Window::Center());
-		}
 	}
 private:
 	int m_i = 0;
