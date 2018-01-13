@@ -64,11 +64,17 @@ public:
 		{
 			m_data->field.SetMirror(Players::One, true);
 			m_data->field.SetMirror(Players::Two, false);
+
+			m_data->players[0].SetPos(m_data->field.PlayerCenter(Players::One));
+			m_data->players[1].SetPos(m_data->field.PlayerCenter(Players::Two));
 		}
 		if (Input::KeyR.clicked)
 		{
 			m_data->field.SetMirror(Players::One, false);
 			m_data->field.SetMirror(Players::Two, true);
+
+			m_data->players[0].SetPos(m_data->field.PlayerCenter(Players::One));
+			m_data->players[1].SetPos(m_data->field.PlayerCenter(Players::Two));
 		}
 
 		m_data->b_manager.Update(m_data->field);
