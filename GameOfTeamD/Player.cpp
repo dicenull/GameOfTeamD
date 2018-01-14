@@ -52,3 +52,8 @@ int Player::Score()
 {
 	return m_score;
 }
+
+Players Player::PlayerType()
+{
+	return m_players;
+}
