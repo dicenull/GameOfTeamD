@@ -53,7 +53,7 @@ int Player::Score()
 	return m_score;
 }
 
-PlayerType Player::PlayerType()
+PlayerType Player::GetPlayerType()
 {
 	return m_player_type;
 }

@@ -25,7 +25,7 @@ public:
 	///</summary>
 	int Score();
 
-	PlayerType PlayerType();
+	PlayerType GetPlayerType();
 
 private:
 	int m_score;
