@@ -349,9 +349,34 @@ Point Field::PlayerCenter(PlayerType p) const
 	return PlayerOrigin(p) + Point(PlayerWidth() / 2, Height() / 2);
 }
 
+Point Field::BlockStartPos(PlayerType p) const
+{
+	if (m_is_mirror.at(p))
+	{
+		return SpaceOrigin(p);
+	}
+	else
+	{
+		return SpaceEndPos(p) - Point(0, Height());
+	}
+}
+
+
 void Field::SetMirror(PlayerType p, bool is_mirror)
 {
 	m_is_mirror[p] = is_mirror;
+}
+
+Action Field::FieldDirection(PlayerType p) const
+{
+	if (m_is_mirror.at(p))
+	{
+		return Action::Right;
+	}
+	else
+	{
+		return Action::Left;
+	}
 }
 
 bool Field::IsInPuzzleField(PlayerType p, Point pos) const

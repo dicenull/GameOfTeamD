@@ -1,7 +1,9 @@
 #pragma once
 
 #include <Siv3D.hpp>
+#include <map>
 #include "PlayerLib.h"
+#include "Action.h"
 
 class Field
 {
@@ -38,7 +40,11 @@ public:
 
 	Point PlayerCenter(PlayerType p) const;
 
+	Point BlockStartPos(PlayerType p) const;
+
 	void SetMirror(PlayerType p, bool is_mirror);
+
+	Action FieldDirection(PlayerType p) const;
 
 	bool IsInPuzzleField(PlayerType p, Point pos) const;
 	bool IsInPlayerField(PlayerType p, Point pos) const;
@@ -47,6 +53,12 @@ public:
 
 	template <class Type>
 		bool IsInPlayerField(PlayerType p, Type shape) const;
+
+	///<summary>
+	/// ブロックが移動する領域にその図形があるか判定する
+	///</summary>
+	template<class Type>
+		bool IsInBlockField(PlayerType p, Type shape) const;
 
 private:
 	Point m_window = Window::Size();
@@ -81,4 +93,10 @@ template<class Type>
 bool Field::IsInPlayerField(PlayerType p, Type shape) const
 {
 	return Rect(PlayerOrigin(p), Size(PlayerWidth(), Height())).contains(shape);
+}
+
+template<class Type>
+bool Field::IsInBlockField(PlayerType p, Type shape) const
+{
+	return Rect(PlayerOrigin(p), Size(PlayerWidth() + SpaceWidth(), Height())).contains(shape);
 }
