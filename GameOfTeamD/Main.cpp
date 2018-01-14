@@ -9,11 +9,15 @@
 
 struct CommonData
 {
-	Field field;
+	Field field{};
 	Stopwatch timer;
 	Font font{ 25 };
 	// プレイヤーフィールドの中心にプレイヤーの位置を設定する
-	Player players[2] = { {PlayerType::One, field.PlayerCenter(PlayerType::One)}, {PlayerType::Two, field.PlayerCenter(PlayerType::Two)} };
+	Player players[2] = 
+	{ 
+		{PlayerType::One, field.PlayerCenter(PlayerType::One)}, 
+		{PlayerType::Two, field.PlayerCenter(PlayerType::Two)} 
+	};
 
 	BlockManager b_manager{};
 	Block b1{ Grid<PieceType>(2, 2, Array<PieceType>({ PieceType::None, PieceType::Red, PieceType::Blue, PieceType::Green })) };
@@ -92,14 +96,12 @@ public:
 		if (Input::KeyS.pressed) m_data->players[1].Move(Action::Down, m_data->field);
 
 		// ブロックを動かす
-		m_data->b_manager.Update(m_data->field);
+		m_data->b_manager.Update(m_data->field, m_data->players);
 		m_data->field.Update();
 	}
 
 	void draw() const override
 	{
-		m_data->b1.Draw(m_data->field.Zk());
-
 		m_data->field.Draw();
 
 		// タイムを描画

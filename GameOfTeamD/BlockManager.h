@@ -32,7 +32,7 @@ public:
 	///<summary>
 	/// 管理しているブロックの情報を更新する
 	///</summary>
-	void Update(const Field & field);
+	void Update(Field & field, const Player * players);
 
 	///<summary>
 	/// 管理しているブロックを描画する

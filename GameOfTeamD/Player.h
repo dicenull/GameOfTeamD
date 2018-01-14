@@ -1,60 +1,63 @@
-#pragma once
+ï»¿#pragma once
+#include "Field.h"
+#include "PlayerLib.h"
 #include "Character.h"
 #include "Action.h"
-#include "Field.h"
+
+class Field;
 
 class Player :
 	public Character<Circle>
 {
 public:
 	///<summary>
-	/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	///</summary>
-	///<param name="p">”Ô†</param>
-	///<param name="pos">‰ŠúÀ•W</param>
+	///<param name="p">ç•ªå·</param>
+	///<param name="pos">åˆæœŸåº§æ¨™</param>
 	Player(PlayerType p, Point pos);
 
 	///<summary>
-	/// ƒfƒXƒgƒ‰ƒNƒ^
+	/// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	///</summary>
 	virtual ~Player();
 
 public:
 	///<summary>
-	///ƒvƒŒƒCƒ„[‚ÌêŠ‚ğæ“¾‚·‚é
+	///ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å ´æ‰€ã‚’å–å¾—ã™ã‚‹
 	///</summary>
 	Point Pos();
 
 	///<summary>
-	/// ƒvƒŒƒCƒ„[‚ÌêŠ‚ğİ’è‚·‚é
+	/// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å ´æ‰€ã‚’è¨­å®šã™ã‚‹
 	///</summary>
 	void SetPos(Point pos);
 
 	///<summary>
-	/// ƒvƒŒƒCƒ„[‚ğ“®‚©‚·
+	/// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’å‹•ã‹ã™
 	///</summary>
-	///<param name="action">“®ì‚³‚¹‚és“®‚ÌŒü‚«</param>
-	///<param name="field">ƒvƒŒƒCƒ„[‚Ì‚¢‚éƒtƒB[ƒ‹ƒh</param>
+	///<param name="action">å‹•ä½œã•ã›ã‚‹è¡Œå‹•ã®å‘ã</param>
+	///<param name="field">ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã„ã‚‹ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰</param>
 	void Move(Action action, const Field & field);
 
 	///<summary>
-	///ƒvƒŒƒCƒ„[‚Ì“¾“_
+	///ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å¾—ç‚¹
 	///</summary>
 	int Score();
 
 	///<summary>
-	/// ƒvƒŒƒCƒ„[”Ô†‚ğæ“¾‚·‚é
+	/// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ç•ªå·ã‚’å–å¾—ã™ã‚‹
 	///</summary>
 	PlayerType GetPlayerType();
 
 private:
 	///<summary>
-	/// ƒXƒRƒA‚Ìƒf[ƒ^
+	/// ã‚¹ã‚³ã‚¢ã®ãƒ‡ãƒ¼ã‚¿
 	///</summary>
 	int m_score;
 
 	///<summary>
-	/// ”Ô†‚Ìƒf[ƒ^
+	/// ç•ªå·ã®ãƒ‡ãƒ¼ã‚¿
 	///</summary>
 	PlayerType m_player_type;
 };

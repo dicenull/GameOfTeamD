@@ -37,6 +37,14 @@ void Field::Update()
 	m_window = Window::Size();
 }
 
+void Field::SetBlock(PlayerType p, Block block)
+{
+	Grid<Rect> puzzles = ((p == PlayerType::One) ? m_p1_puzzles : m_p2_puzzles);
+
+	// ƒuƒƒbƒN‚ğ‰œ‹l‚ß‚Å’Ç‰Á‚·‚é
+	Println(L"Set Block");
+}
+
 void Field::Draw() const
 {
 	// ˜gü‚ğ•`‰æ

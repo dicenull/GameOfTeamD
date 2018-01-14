@@ -2,8 +2,11 @@
 
 #include <Siv3D.hpp>
 #include <map>
+#include "Block.h"
 #include "PlayerLib.h"
 #include "Action.h"
+
+class Block;
 
 class Field
 {
@@ -40,6 +43,11 @@ public:
 	/// フィールドの状態を更新する
 	///</summary>
 	void Update();
+
+	///<summary>
+	/// フィールドにブロックを追加する
+	///</summary>
+	void SetBlock(PlayerType p, Block block);
 
 	///<summary>
 	/// フィールドの高さを取得する
