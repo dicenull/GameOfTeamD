@@ -6,7 +6,7 @@ template <class Type>
 class Character
 {
 public:
-	Character(double speed = 1.0);
+	Character(double speed = 2.0);
 	virtual ~Character();
 
 public:
