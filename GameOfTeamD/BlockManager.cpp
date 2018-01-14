@@ -2,12 +2,10 @@
 
 
 
-BlockManager::BlockManager(int32 zk)
+BlockManager::BlockManager()
 {
 	m_blocks[PlayerType::One].clear();
 	m_blocks[PlayerType::Two].clear();
-	m_zk = zk;
-	m_window_width = Window::Width();
 }
 
 BlockManager::~BlockManager()
@@ -16,7 +14,7 @@ BlockManager::~BlockManager()
 
 void BlockManager::CreateBlock(PlayerType p, int height, Block block, const Field & field)
 {
-	block.SetPos(field.BlockStartPos(p) + Point(-m_zk * Block::MaxLength(), height * m_zk));
+	block.SetPos(field.BlockStartPos(p) + Point(-field.Zk() * Block::MaxLength(), height * field.Zk()));
 	m_blocks[p].push_back(block);
 }
 
@@ -51,15 +49,15 @@ void BlockManager::Update(const Field & field)
 	}
 }
 
-void BlockManager::DrawBlocks() const
+void BlockManager::DrawBlocks(const Field & field) const
 {
 	for (auto block : m_blocks.at(PlayerType::One))
 	{
-		block.Draw(m_zk);
+		block.Draw(field.Zk());
 	}
 
 	for (auto block : m_blocks.at(PlayerType::Two))
 	{
-		block.Draw(m_zk);
+		block.Draw(field.Zk());
 	}
 }

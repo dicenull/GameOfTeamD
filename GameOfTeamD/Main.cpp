@@ -15,7 +15,7 @@ struct CommonData
 	// プレイヤーフィールドの中心にプレイヤーの位置を設定する
 	Player players[2] = { {PlayerType::One, field.PlayerCenter(PlayerType::One)}, {PlayerType::Two, field.PlayerCenter(PlayerType::Two)} };
 
-	BlockManager b_manager{ field.Zk() };
+	BlockManager b_manager{};
 	Block b1{ Grid<PieceType>(2, 2, Array<PieceType>({ PieceType::None, PieceType::Red, PieceType::Blue, PieceType::Green })) };
 };
 
@@ -109,7 +109,7 @@ public:
 		// プレイヤー2のスコアを描画
 		m_data->font(m_data->players[1].Score()).drawCenter(Point(Window::Size().x - Window::Size().x / 5.0, Window::Center().y));
 
-		m_data->b_manager.DrawBlocks();
+		m_data->b_manager.DrawBlocks(m_data->field);
 
 		// プレイヤーを描画
 		m_data->players[0].Shape.draw();
