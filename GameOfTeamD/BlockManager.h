@@ -1,5 +1,6 @@
 #pragma once
 #include <Siv3D.hpp>
+#include <algorithm>
 #include "Block.h"
 #include "PlayerLib.h"
 #include "Field.h"
@@ -11,13 +12,12 @@ public:
 	~BlockManager();
 
 public:
-	void CreateBlock(Players p, int height, Block block, const Field & field);
+	void CreateBlock(PlayerType p, int height, Block block, const Field & field);
 	void Update(const Field & field);
 	void DrawBlocks() const;
 
 private:
-	Array<Block> m_p1_blocks;
-	Array<Block> m_p2_blocks;
+	std::map<PlayerType, Array<Block>> m_blocks;
 	int32 m_zk;
 	int32 m_window_width;
 };

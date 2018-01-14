@@ -4,11 +4,11 @@
 
 Block::Block()
 {
-	m_pieces.fill(Palette::White);
+	m_pieces.fill(PieceType::None);
 	m_pos = Point();
 }
 
-Block::Block(Grid<Color> pieces)
+Block::Block(Grid<PieceType> pieces)
 {
 	if (pieces.size() != m_pieces.size())
 		throw std::invalid_argument("ÉsÅ[ÉXêîÇ™àÍívÇµÇƒÇ¢Ç‹ÇπÇÒ");
@@ -29,12 +29,42 @@ int Block::MaxLength()
 
 Grid<Color> Block::GetColor() const
 {
-	return m_pieces;
+	Grid<Color> colors{ Size(length, length) };
+	
+	for (int i = 0; i < length; i++)
+	{
+		for (int j = 0; j < length; j++)
+		{
+			PieceType p = m_pieces[j][i];
+			
+			colors[j][i] = Piece::ColorParse(p);
+		}
+	}
+
+	return colors;
+}
+
+Array<Rect> Block::GetPieces(int32 zk) const
+{
+	Array<Rect> pieces;
+
+	for (int i = 0; i < length; i++)
+	{
+		for (int j = 0; j < length; j++)
+		{
+			if (m_pieces[j][i] != PieceType::None)
+			{
+				pieces.push_back(Rect(Point(m_pos.x + j * zk, m_pos.y + i * zk), Size(zk, zk)));
+			}
+		}
+	}
+
+	return pieces;
 }
 
 void Block::TurnRight()
 {
-	Grid<Color> tmp(length, length);
+	Grid<PieceType> tmp(length, length);
 
 	for (int i = 0; i < length; i++)
 	{
@@ -49,7 +79,7 @@ void Block::TurnRight()
 
 void Block::TurnLeft()
 {
-	Grid<Color> tmp(length, length);
+	Grid<PieceType> tmp(length, length);
 
 	for (int i = 0; i < length; i++)
 	{
@@ -89,11 +119,17 @@ void Block::Move(Action action)
 
 void Block::Draw(int32 zk) const
 {
+	Rect r;
 	for (int i = 0; i < length; i++)
 	{
 		for (int j = 0; j < length; j++)
 		{
-			Rect(Point(m_pos.x + i * zk, m_pos.y + j * zk), zk, zk).draw(m_pieces[i][j]);
+			r = Rect(Point(m_pos.x + i * zk, m_pos.y + j * zk), zk, zk);
+			if (m_pieces[i][j] != PieceType::None)
+			{
+				r.draw(Piece::ColorParse(m_pieces[i][j]));
+				r.drawFrame();
+			}
 		}
 	}
 }

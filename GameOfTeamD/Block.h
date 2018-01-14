@@ -3,6 +3,7 @@
 #include <Siv3D.hpp>
 #include "Player.h"
 #include "Action.h"
+#include "PieceType.h"
 
 class Block
 {
@@ -16,7 +17,7 @@ public:
 	/// ピースを元にブロックを作成する
 	///</summary>
 	///<param name="pieces">Length*Lengthの二次元配列のピース</param>
-	Block(Grid<Color> pieces);
+	Block(Grid<PieceType> pieces);
 
 	///<summary>
 	/// デストラクタ
@@ -33,6 +34,11 @@ public:
 	/// ブロックの色を取得する
 	///</summary>
 	Grid<Color> GetColor() const;
+
+	///<summary>
+	/// ブロックの各ピースを取得する
+	///</summary>
+	Array<Rect> GetPieces(int32 zk) const;
 
 	///<summary>
 	/// ブロックを右に90度回転する
@@ -75,7 +81,7 @@ private:
 	///<summary>
 	/// ブロックの色データ
 	///</summary>
-	Grid<Color> m_pieces{ length, length };
+	Grid<PieceType> m_pieces{ length, length };
 
 	///<summary>
 	/// ブロックの左上の座標

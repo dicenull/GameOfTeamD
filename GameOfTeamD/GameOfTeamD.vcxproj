@@ -167,6 +167,7 @@
     <ClCompile Include="BlockManager.cpp" />
     <ClCompile Include="Field.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="PieceType.cpp" />
     <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -287,6 +288,7 @@
     <ClInclude Include="BlockManager.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="Field.h" />
+    <ClInclude Include="PieceType.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerLib.h" />
   </ItemGroup>

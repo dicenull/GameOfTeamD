@@ -16,7 +16,7 @@ struct CommonData
 	Player players[2] = { {PlayerType::One, field.PlayerCenter(PlayerType::One)}, {PlayerType::Two, field.PlayerCenter(PlayerType::Two)} };
 
 	BlockManager b_manager{ field.Zk() };
-	Block b1{ Grid<Color>(2, 2, Array<Color>({ Palette::White, Palette::Red, Palette::Blue, Palette::Green })) };
+	Block b1{ Grid<PieceType>(2, 2, Array<PieceType>({ PieceType::None, PieceType::Red, PieceType::Blue, PieceType::Green })) };
 };
 
 using MyApp = SceneManager<String, CommonData>;
