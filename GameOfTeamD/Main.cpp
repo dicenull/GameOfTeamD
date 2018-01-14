@@ -13,7 +13,7 @@ struct CommonData
 	Stopwatch timer;
 	Font font{ 25 };
 	// プレイヤーフィールドの中心にプレイヤーの位置を設定する
-	Player players[2] = { {Players::One, field.PlayerCenter(Players::One)}, {Players::Two, field.PlayerCenter(Players::Two)} };
+	Player players[2] = { {PlayerType::One, field.PlayerCenter(PlayerType::One)}, {PlayerType::Two, field.PlayerCenter(PlayerType::Two)} };
 
 	BlockManager b_manager{ field.Zk() };
 	Block b1{ Grid<Color>(2, 2, Array<Color>({ Palette::White, Palette::Red, Palette::Blue, Palette::Green })) };
@@ -56,7 +56,7 @@ public:
 	{
 		if (Input::KeyB.clicked)
 		{
-			m_data->b_manager.CreateBlock(Players::One, m_i, m_data->b1, m_data->field);
+			m_data->b_manager.CreateBlock(PlayerType::One, m_i, m_data->b1, m_data->field);
 
 			m_i = (m_i < m_data->field.Height() / m_data->field.Zk() - 2) ? m_i + 1 : 0;
 		}
@@ -64,19 +64,19 @@ public:
 		// フィールドの向きを反転し、プレイヤーの位置を戻す
 		if (Input::KeyF.clicked)
 		{
-			m_data->field.SetMirror(Players::One, true);
-			m_data->field.SetMirror(Players::Two, false);
+			m_data->field.SetMirror(PlayerType::One, true);
+			m_data->field.SetMirror(PlayerType::Two, false);
 
-			m_data->players[0].SetPos(m_data->field.PlayerCenter(Players::One));
-			m_data->players[1].SetPos(m_data->field.PlayerCenter(Players::Two));
+			m_data->players[0].SetPos(m_data->field.PlayerCenter(PlayerType::One));
+			m_data->players[1].SetPos(m_data->field.PlayerCenter(PlayerType::Two));
 		}
 		if (Input::KeyR.clicked)
 		{
-			m_data->field.SetMirror(Players::One, false);
-			m_data->field.SetMirror(Players::Two, true);
+			m_data->field.SetMirror(PlayerType::One, false);
+			m_data->field.SetMirror(PlayerType::Two, true);
 
-			m_data->players[0].SetPos(m_data->field.PlayerCenter(Players::One));
-			m_data->players[1].SetPos(m_data->field.PlayerCenter(Players::Two));
+			m_data->players[0].SetPos(m_data->field.PlayerCenter(PlayerType::One));
+			m_data->players[1].SetPos(m_data->field.PlayerCenter(PlayerType::Two));
 		}
 
 		// プレイヤー1の操作

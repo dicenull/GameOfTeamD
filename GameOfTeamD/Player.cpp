@@ -2,10 +2,10 @@
 
 
 
-Player::Player(Players p, Point pos)
+Player::Player(PlayerType p, Point pos)
 {
 	this->Shape.setPos(pos);
-	m_players = p;
+	m_player_type = p;
 }
 
 
@@ -42,7 +42,7 @@ void Player::Move(Action action, const Field & field)
 		break;
 	}
 	
-	if (field.IsInPlayerField(m_players, this->Shape.movedBy(v)))
+	if (field.IsInPlayerField(m_player_type, this->Shape.movedBy(v)))
 	{
 		this->Shape.moveBy(v);
 	}
@@ -53,7 +53,7 @@ int Player::Score()
 	return m_score;
 }
 
-Players Player::PlayerType()
+PlayerType Player::PlayerType()
 {
-	return m_players;
+	return m_player_type;
 }

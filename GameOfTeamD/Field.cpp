@@ -1,7 +1,7 @@
 #include "Field.h"
 #include <Siv3D.hpp>
 
-Field::Field(int32 field_height, int32 puzzle_width, int32 player_width, int32 zk_size, std::map<Players, bool> is_mirrors)
+Field::Field(int32 field_height, int32 puzzle_width, int32 player_width, int32 zk_size, std::map<PlayerType, bool> is_mirrors)
 {
 	m_field_height = field_height;
 	m_puzzle_width = puzzle_width;
@@ -12,8 +12,8 @@ Field::Field(int32 field_height, int32 puzzle_width, int32 player_width, int32 z
 	m_p1_puzzles.resize(Size(puzzle_width, field_height));
 	m_p2_puzzles.resize(Size(puzzle_width, field_height));
 
-	m_is_mirror[Players::One] = is_mirrors[Players::One];
-	m_is_mirror[Players::Two] = is_mirrors[Players::Two];
+	m_is_mirror[PlayerType::One] = is_mirrors[PlayerType::One];
+	m_is_mirror[PlayerType::Two] = is_mirrors[PlayerType::Two];
 
 }
 
@@ -45,7 +45,7 @@ void Field::Draw() const
 	Color l_color = Palette::Lightgrey;
 	Size size = Size(m_zk, m_zk);
 
-	for (auto p : { Players::One, Players::Two })
+	for (auto p : { PlayerType::One, PlayerType::Two })
 	{
 
 		// スコア表示部とフィールドの境界線
@@ -70,8 +70,8 @@ void Field::Draw() const
 			auto p2_puzzle = m_p2_puzzles[h][w];
 			Point pos = Point(m_zk * w, m_zk * h);
 
-			p1_puzzle.set(PuzzleOrigin(Players::One) + pos, size);
-			p2_puzzle.set(PuzzleOrigin(Players::Two) + pos, size);
+			p1_puzzle.set(PuzzleOrigin(PlayerType::One) + pos, size);
+			p2_puzzle.set(PuzzleOrigin(PlayerType::Two) + pos, size);
 
 			p1_puzzle.drawFrame();
 			p2_puzzle.drawFrame();
@@ -116,11 +116,11 @@ int32 Field::Zk() const
 ///<summary>
 ///パズルフィールドの左上の座標
 ///</summary>
-Point Field::PuzzleOrigin(Players p) const
+Point Field::PuzzleOrigin(PlayerType p) const
 {
 	switch (p)
 	{
-	case Players::One:
+	case PlayerType::One:
 		if (m_is_mirror.at(p))
 		{
 			return Point(m_window.x - PuzzleWidth(), 0);
@@ -129,7 +129,7 @@ Point Field::PuzzleOrigin(Players p) const
 		{
 			return Point(0, 0);
 		}
-	case Players::Two:
+	case PlayerType::Two:
 		if (m_is_mirror.at(p))
 		{
 			return Point(m_window.x - PuzzleWidth(), m_window.y - Height());
@@ -146,11 +146,11 @@ Point Field::PuzzleOrigin(Players p) const
 ///<summary>
 ///プレイヤーフィールドの左上の座標
 ///</summary>
-Point Field::PlayerOrigin(Players p) const
+Point Field::PlayerOrigin(PlayerType p) const
 {
 	switch (p)
 	{
-	case Players::One:
+	case PlayerType::One:
 		if (m_is_mirror.at(p))
 		{
 			return Point(m_window.x - Width(), 0);
@@ -159,7 +159,7 @@ Point Field::PlayerOrigin(Players p) const
 		{
 			return Point(PuzzleWidth(), 0);
 		}
-	case Players::Two:
+	case PlayerType::Two:
 		if (m_is_mirror.at(p))
 		{
 			return Point(m_window.x - Width(), m_window.y - Height());
@@ -176,11 +176,11 @@ Point Field::PlayerOrigin(Players p) const
 ///<summary>
 ///宇宙フィールドの左上の座標
 ///</summary>
-Point Field::SpaceOrigin(Players p) const
+Point Field::SpaceOrigin(PlayerType p) const
 {
 	switch (p)
 	{
-	case Players::One:
+	case PlayerType::One:
 		if (m_is_mirror.at(p))
 		{
 			return Point(0, 0);
@@ -189,7 +189,7 @@ Point Field::SpaceOrigin(Players p) const
 		{
 			return Point(Width(), 0);
 		}
-	case Players::Two:
+	case PlayerType::Two:
 		if (m_is_mirror.at(p))
 		{
 			return Point(0, m_window.y - Height());
@@ -206,11 +206,11 @@ Point Field::SpaceOrigin(Players p) const
 ///<summary>
 ///パズルフィールドの右下の座標
 ///</summary>
-Point Field::PuzzleEndPos(Players p) const
+Point Field::PuzzleEndPos(PlayerType p) const
 {
 	switch (p)
 	{
-	case Players::One:
+	case PlayerType::One:
 		if (m_is_mirror.at(p))
 		{
 			return Point(m_window.x, Height());
@@ -219,7 +219,7 @@ Point Field::PuzzleEndPos(Players p) const
 		{
 			return Point(PuzzleWidth(), Height());
 		}
-	case Players::Two:
+	case PlayerType::Two:
 		if (m_is_mirror.at(p))
 		{
 			return Point(m_window.x, m_window.y);
@@ -236,11 +236,11 @@ Point Field::PuzzleEndPos(Players p) const
 ///<summary>
 ///プレイヤーフィールドの右下の座標
 ///</summary>
-Point Field::PlayerEndPos(Players p) const
+Point Field::PlayerEndPos(PlayerType p) const
 {
 	switch (p)
 	{
-	case Players::One:
+	case PlayerType::One:
 		if (m_is_mirror.at(p))
 		{
 			return Point(m_window.x - PuzzleWidth(), Height());
@@ -249,7 +249,7 @@ Point Field::PlayerEndPos(Players p) const
 		{
 			return Point(Width(), Height());
 		}
-	case Players::Two:
+	case PlayerType::Two:
 		if (m_is_mirror.at(p))
 		{
 			return Point(m_window.x - PuzzleWidth(), m_window.y);
@@ -266,11 +266,11 @@ Point Field::PlayerEndPos(Players p) const
 ///<summary>
 ///宇宙フィールドの右下の座標
 ///</summary>
-Point Field::SpaceEndPos(Players p) const
+Point Field::SpaceEndPos(PlayerType p) const
 {
 	switch (p)
 	{
-	case Players::One:
+	case PlayerType::One:
 		if (m_is_mirror.at(p))
 		{
 			return Point(m_window.x - Width(), Height());
@@ -279,7 +279,7 @@ Point Field::SpaceEndPos(Players p) const
 		{
 			return Point(m_window.x, Height());
 		}
-	case Players::Two:
+	case PlayerType::Two:
 		if (m_is_mirror.at(p))
 		{
 			return Point(m_window.x - Width(), m_window.y);
@@ -293,37 +293,37 @@ Point Field::SpaceEndPos(Players p) const
 	}
 }
 
-Point Field::LeftBorder(Players p) const
+Point Field::LeftBorder(PlayerType p) const
 {
 	switch (p)
 	{
-	case Players::One:
+	case PlayerType::One:
 		return Point(0, Height());
-	case Players::Two:
+	case PlayerType::Two:
 		return Point(0, m_window.y - Height());
 	default:
 		return Point();
 	}
 }
 
-Point Field::RightBorder(Players p) const
+Point Field::RightBorder(PlayerType p) const
 {
 	switch (p)
 	{
-	case Players::One:
+	case PlayerType::One:
 		return Point(m_window.x, Height());
-	case Players::Two:
+	case PlayerType::Two:
 		return Point(m_window.x, m_window.y - Height());
 	default:
 		return Point();
 	}
 }
 
-Point Field::PlayerTopBorder(Players p) const
+Point Field::PlayerTopBorder(PlayerType p) const
 {
 	switch (p)
 	{
-	case Players::One:
+	case PlayerType::One:
 		if (m_is_mirror.at(p))
 		{
 			return Point(m_window.x - Width(), 0);
@@ -332,7 +332,7 @@ Point Field::PlayerTopBorder(Players p) const
 		{
 			return Point(Width(), 0 );
 		}
-	case Players::Two:
+	case PlayerType::Two:
 		if (m_is_mirror.at(p))
 		{
 			return Point(m_window.x - Width(), m_window.y - Height());
@@ -344,35 +344,35 @@ Point Field::PlayerTopBorder(Players p) const
 	}
 }
 
-Point Field::PlayerCenter(Players p) const
+Point Field::PlayerCenter(PlayerType p) const
 {
 	return PlayerOrigin(p) + Point(PlayerWidth() / 2, Height() / 2);
 }
 
-void Field::SetMirror(Players p, bool is_mirror)
+void Field::SetMirror(PlayerType p, bool is_mirror)
 {
 	m_is_mirror[p] = is_mirror;
 }
 
-bool Field::IsInPuzzleField(Players p, Point pos) const
+bool Field::IsInPuzzleField(PlayerType p, Point pos) const
 {
 	return (PuzzleOrigin(p).x <= pos.x && pos.x <= PuzzleEndPos(p).x)
 		&& (PuzzleOrigin(p).y <= pos.y && pos.y <= PuzzleEndPos(p).y);
 }
 
-bool Field::IsInPlayerField(Players p, Point pos) const 
+bool Field::IsInPlayerField(PlayerType p, Point pos) const 
 {
 	return (PlayerOrigin(p).x <= pos.x && pos.x <= PlayerEndPos(p).x)
 		&& (PlayerOrigin(p).y <= pos.y && pos.y <= PlayerEndPos(p).y);
 }
 
-bool Field::IsInSpaceField(Players p, Point pos)const
+bool Field::IsInSpaceField(PlayerType p, Point pos)const
 {
 	return (SpaceOrigin(p).x <= pos.x && pos.x <= SpaceEndPos(p).x)
 		&& (SpaceOrigin(p).y <= pos.y && pos.y <= SpaceEndPos(p).y);
 }
 
-bool Field::IsInField(Players p, Point pos) const
+bool Field::IsInField(PlayerType p, Point pos) const
 {
 	return IsInPuzzleField(p, pos) || IsInPlayerField(p, pos) || IsInSpaceField(p, pos);
 }

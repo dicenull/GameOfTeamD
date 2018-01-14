@@ -7,7 +7,7 @@ class Player :
 	public Character<Circle>
 {
 public:
-	Player(Players p, Point pos);
+	Player(PlayerType p, Point pos);
 	virtual ~Player();
 
 public:
@@ -25,8 +25,10 @@ public:
 	///</summary>
 	int Score();
 
+	PlayerType PlayerType();
+
 private:
 	int m_score;
-	Players m_players;
+	PlayerType m_player_type;
 };
 
