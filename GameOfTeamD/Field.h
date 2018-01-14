@@ -141,6 +141,11 @@ public:
 	void SetMirror(PlayerType p, bool is_mirror);
 
 	///<summary>
+	/// プレイヤーのフィールドが反転しているか取得する
+	///</summary>
+	bool GetMirror(PlayerType p) const;
+
+	///<summary>
 	/// ブロックが進むべき方向を取得する
 	///</summary>
 	///<param name="p">どのプレイヤーがいるフィールドか</param>
@@ -239,5 +244,15 @@ bool Field::IsInPlayerField(PlayerType p, Type shape) const
 template<class Type>
 bool Field::IsInBlockField(PlayerType p, Type shape) const
 {
-	return Rect(PlayerOrigin(p), Size(PlayerWidth() + SpaceWidth(), Height())).contains(shape);
+	Point origin;
+	if (m_is_mirror.at(p))
+	{
+		origin = SpaceOrigin(p);
+	}
+	else
+	{
+		origin = PlayerOrigin(p);
+	}
+
+	return Rect(origin, Size(PlayerWidth() + SpaceWidth(), Height())).contains(shape);
 }

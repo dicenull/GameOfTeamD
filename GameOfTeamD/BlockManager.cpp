@@ -14,7 +14,8 @@ BlockManager::~BlockManager()
 
 void BlockManager::CreateBlock(PlayerType p, int height, Block block, const Field & field)
 {
-	block.SetPos(field.BlockStartPos(p) + Point(-field.Zk() * Block::MaxLength(), height * field.Zk()));
+	int x = ((field.GetMirror(p)) ? 0 : -field.Zk() * Block::MaxLength());
+	block.SetPos(field.BlockStartPos(p) + Point(x, height * field.Zk()));
 	m_blocks[p].push_back(block);
 }
 

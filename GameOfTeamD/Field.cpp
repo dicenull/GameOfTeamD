@@ -367,6 +367,11 @@ void Field::SetMirror(PlayerType p, bool is_mirror)
 	m_is_mirror[p] = is_mirror;
 }
 
+bool Field::GetMirror(PlayerType p) const
+{
+	return m_is_mirror.at(p);
+}
+
 Action Field::FieldDirection(PlayerType p) const
 {
 	if (m_is_mirror.at(p))
