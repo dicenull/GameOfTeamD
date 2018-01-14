@@ -22,7 +22,7 @@ Block::~Block()
 	m_pieces.clear();
 }
 
-int Block::Length()
+int Block::MaxLength()
 {
 	return length;
 }
@@ -30,11 +30,6 @@ int Block::Length()
 Grid<Color> Block::GetColor() const
 {
 	return m_pieces;
-}
-
-int Block::Max()
-{
-	return length;
 }
 
 void Block::TurnRight()
@@ -77,14 +72,14 @@ Point Block::GetBottomLeft()
 	return Point(m_pos.x, m_pos.y + (length - 1));
 }
 
-void Block::Move(Players p)
+void Block::Move(Action action)
 {
-	switch (p)
+	switch (action)
 	{
-	case Players::One:
+	case Action::Left:
 		m_pos.moveBy(Point::Left);
 		break;
-	case Players::Two:
+	case Action::Right:
 		m_pos.moveBy(Point::Right);
 		break;
 	default:
