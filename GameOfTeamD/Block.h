@@ -70,7 +70,8 @@ public:
 	/// zkを指定してブロックを描画する
 	///</summary>
 	///<param name="zk">一マス当たりの大きさ</param>
-	void Draw(int32 zk) const;
+	///<param name="origin">パズルフィールドの原点</param>
+	void Draw(Point origin, int32 zk) const;
 
 private:
 	///<summary>

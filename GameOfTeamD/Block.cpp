@@ -117,14 +117,14 @@ void Block::Move(Action action)
 	}
 }
 
-void Block::Draw(int32 zk) const
+void Block::Draw(Point origin, int32 zk) const
 {
 	Rect r;
 	for (int i = 0; i < length; i++)
 	{
 		for (int j = 0; j < length; j++)
 		{
-			r = Rect(Point(m_pos.x + i * zk, m_pos.y + j * zk), zk, zk);
+			r = Rect(origin + Point(m_pos.x + i * zk, m_pos.y + j * zk), zk, zk);
 			if (m_pieces[i][j] != PieceType::None)
 			{
 				r.draw(Piece::ColorParse(m_pieces[i][j]));
