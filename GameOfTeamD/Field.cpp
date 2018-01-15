@@ -53,22 +53,6 @@ void Field::Draw() const
 	Color l_color = Palette::Lightgrey;
 	Size size = Size(m_zk, m_zk);
 
-	for (auto p : { PlayerType::One, PlayerType::Two })
-	{
-
-		// スコア表示部とフィールドの境界線
-		Line(LeftBorder(p), RightBorder(p)).draw(3.0, f_color);
-		
-		// プレイヤーフィールドの境界線
-		Line(PlayerTopBorder(p), PlayerTopBorder(p) + Point(0, Height())).draw(2.0, p_color);
-
-		// パズルが移動してくるフィールドの補助線
-		for (int h = 1; h < m_field_height; h++)
-		{
-			Line(SpaceOrigin(p) + Point(0, h * m_zk), SpaceOrigin(p) + Point(SpaceWidth(), h * m_zk)).draw(1, l_color);
-		}
-	}
-
 	// パズルフィールドを描画
 	for (int w = 0; w < m_puzzle_width; w++)
 	{
@@ -85,6 +69,23 @@ void Field::Draw() const
 			p2_puzzle.drawFrame();
 		}
 	}
+
+	for (auto p : { PlayerType::One, PlayerType::Two })
+	{
+
+		// スコア表示部とフィールドの境界線
+		Line(LeftBorder(p), RightBorder(p)).draw(3.0, f_color);
+		
+		// プレイヤーフィールドの境界線
+		Line(PlayerTopBorder(p), PlayerTopBorder(p) + Point(0, Height())).draw(2.0, p_color);
+
+		// パズルが移動してくるフィールドの補助線
+		for (int h = 1; h < m_field_height; h++)
+		{
+			Line(SpaceOrigin(p) + Point(0, h * m_zk), SpaceOrigin(p) + Point(SpaceWidth(), h * m_zk)).draw(1, l_color);
+		}
+	}
+
 }
 
 Field::~Field()
