@@ -1,12 +1,11 @@
 #include "Field.h"
 #include <Siv3D.hpp>
 
-Field::Field(int32 field_height, int32 puzzle_width, int32 player_width, int32 zk_size, std::map<PlayerType, bool> is_mirrors)
+Field::Field(int32 field_height, int32 puzzle_width, int32 player_width, std::map<PlayerType, bool> is_mirrors)
 {
 	m_field_height = field_height;
 	m_puzzle_width = puzzle_width;
 	m_player_width = player_width;
-	m_zk = zk_size;
 
 	// パズルのフィールドを初期化
 	m_p1_puzzles.resize(Size(puzzle_width, field_height));
@@ -18,7 +17,7 @@ Field::Field(int32 field_height, int32 puzzle_width, int32 player_width, int32 z
 }
 
 Field::Field(const Field & other)
-	: Field::Field(other.m_player_width, other.m_puzzle_width, other.m_player_width, other.m_zk,
+	: Field::Field(other.m_player_width, other.m_puzzle_width, other.m_player_width,
 		other.m_is_mirror)
 { }
 
@@ -29,7 +28,6 @@ void Field::operator=(const Field & other)
 	m_field_height = other.m_field_height;
 	m_p1_puzzles = other.m_p1_puzzles;
 	m_p2_puzzles = other.m_p2_puzzles;
-	m_zk = other.m_zk;
 }
 
 void Field::Update()
@@ -51,7 +49,7 @@ void Field::Draw() const
 	Color f_color = Palette::Darkgreen;
 	Color p_color = Palette::Hotpink;
 	Color l_color = Palette::Lightgrey;
-	Size size = Size(m_zk, m_zk);
+	Size size = Size(MyGame::Zk, MyGame::Zk);
 
 	// パズルフィールドを描画
 	for (int w = 0; w < m_puzzle_width; w++)
@@ -60,7 +58,7 @@ void Field::Draw() const
 		{
 			auto p1_puzzle = m_p1_puzzles[h][w];
 			auto p2_puzzle = m_p2_puzzles[h][w];
-			Point pos = Point(m_zk * w, m_zk * h);
+			Point pos = Point(MyGame::Zk * w, MyGame::Zk * h);
 
 			p1_puzzle.set(PuzzleOrigin(PlayerType::One) + pos, size);
 			p2_puzzle.set(PuzzleOrigin(PlayerType::Two) + pos, size);
@@ -82,7 +80,7 @@ void Field::Draw() const
 		// パズルが移動してくるフィールドの補助線
 		for (int h = 1; h < m_field_height; h++)
 		{
-			Line(SpaceOrigin(p) + Point(0, h * m_zk), SpaceOrigin(p) + Point(SpaceWidth(), h * m_zk)).draw(1, l_color);
+			Line(SpaceOrigin(p) + Point(0, h * MyGame::Zk), SpaceOrigin(p) + Point(SpaceWidth(), h * MyGame::Zk)).draw(1, l_color);
 		}
 	}
 
@@ -94,22 +92,22 @@ Field::~Field()
 
 int32 Field::Height() const
 {
-	return m_field_height * m_zk;
+	return m_field_height * MyGame::Zk;
 }
 
 int32 Field::Width() const
 {
-	return (m_puzzle_width + m_player_width) * m_zk;
+	return (m_puzzle_width + m_player_width) * MyGame::Zk;
 }
 
 int32 Field::PuzzleWidth() const
 {
-	return m_puzzle_width * m_zk;
+	return m_puzzle_width * MyGame::Zk;
 }
 
 int32 Field::PlayerWidth() const
 {
-	return m_player_width * m_zk;
+	return m_player_width * MyGame::Zk;
 }
 
 int32 Field::SpaceWidth() const
@@ -117,10 +115,6 @@ int32 Field::SpaceWidth() const
 	return m_window.x - Width();
 }
 
-int32 Field::Zk() const
-{
-	return m_zk;
-}
 
 ///<summary>
 ///パズルフィールドの左上の座標

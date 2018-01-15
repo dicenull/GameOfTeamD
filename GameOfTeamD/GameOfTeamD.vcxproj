@@ -287,6 +287,7 @@
     <ClInclude Include="BlockManager.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="Field.h" />
+    <ClInclude Include="GameLib.h" />
     <ClInclude Include="PieceType.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerLib.h" />

@@ -14,8 +14,10 @@ BlockManager::~BlockManager()
 
 void BlockManager::CreateBlock(PlayerType p, int height, Block block, const Field & field)
 {
-	int x = ((field.GetMirror(p)) ? 0 : -field.Zk() * Block::MaxLength());
-	block.SetPos(field.BlockStartPos(p) + Point(x, height * field.Zk()));
+	// ブロックがフィールドに入るように作成位置をずらす
+	int x = ((field.GetMirror(p)) ? 0 : -MyGame::Zk * Block::MaxLength());
+
+	block.SetPos(field.BlockStartPos(p) + Point(x, height * MyGame::Zk));
 	m_blocks[p].push_back(block);
 }
 
@@ -29,7 +31,7 @@ void BlockManager::Update(Field & field, const Player * players)
 
 			// ブロックがフィールド内にあるか判定する
 			bool isin_field = true;
-			for (auto piece : block.GetPieces(field.Zk()))
+			for (auto piece : block.GetPieces())
 			{
 				if (!field.IsInBlockField(p, piece))
 				{
@@ -40,17 +42,8 @@ void BlockManager::Update(Field & field, const Player * players)
 
 			if (isin_field)
 			{
-				bool is_intersects_player = false;
-				for (auto piece : block.GetPieces(field.Zk()))
-				{
-					if (piece.intersects(players[static_cast<int>(p)].Shape))
-					{
-						is_intersects_player = true;
-						break;
-					}
-				}
-
-				if (is_intersects_player)
+				// プレイヤーがブロックを取得
+				if (block.Intersects(players[static_cast<int>(p)].Shape))
 				{
 					field.SetBlock(p, block);
 					m_blocks[p].erase(m_blocks[p].begin() + i);
@@ -69,15 +62,15 @@ void BlockManager::Update(Field & field, const Player * players)
 	}
 }
 
-void BlockManager::DrawBlocks(const Field & field) const
+void BlockManager::DrawBlocks() const
 {
 	for (auto block : m_blocks.at(PlayerType::One))
 	{
-		block.Draw(Point::Zero, field.Zk());
+		block.Draw(Point::Zero);
 	}
 
 	for (auto block : m_blocks.at(PlayerType::Two))
 	{
-		block.Draw(Point::Zero, field.Zk());
+		block.Draw(Point::Zero);
 	}
 }

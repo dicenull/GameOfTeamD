@@ -11,7 +11,6 @@ public:
 	///<summary>
 	/// コンストラクタ
 	///</summary>
-	///<param name="zk">一マス当たりの大きさ</param>
 	BlockManager();
 
 	///<summary>
@@ -37,7 +36,7 @@ public:
 	///<summary>
 	/// 管理しているブロックを描画する
 	///</summary>
-	void DrawBlocks(const Field & field) const;
+	void DrawBlocks() const;
 
 private:
 	///<summary>

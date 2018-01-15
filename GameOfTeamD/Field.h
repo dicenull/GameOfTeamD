@@ -17,9 +17,8 @@ public:
 	///<param name="field_heigt">フィールドの高さ[zk]</param>
 	///<param name="puzzle_width">パズルフィールドの幅[zk]</param>
 	///<param name="player_width">プレイヤーフィールドの幅[zk]</param>
-	///<param name="zk_size">1マス当たりの大きさ</param>
 	///<param name="is_mirrors">各プレイヤーのフィールドを反転するか</param>
-	Field(int32 field_height = 8, int32 puzzle_width = 10, int32 player_width = 3, int32 zk_size = 25,
+	Field(int32 field_height = 8, int32 puzzle_width = 10, int32 player_width = 3,
 		std::map<PlayerType, bool> is_mirrors = { {PlayerType::One, false}, {PlayerType::Two, true } });
 
 	///<summary>
@@ -73,11 +72,6 @@ public:
 	/// ブロックが移動するフィールドの幅を取得する
 	///</summary>
 	int32 SpaceWidth() const;
-
-	///<summary>
-	/// 1マス当たりの大きさを取得する
-	///</summary>
-	int32 Zk() const;
 
 	///<summary>
 	/// パズルフィールドの左上の座標
@@ -221,11 +215,6 @@ private:
 	/// プレイヤー一人分のプレイヤーフィールドの幅[zk]
 	/// </summary>
 	int32 m_player_width;
-
-	/// <summary>
-	/// 1[zk]あたりの大きさ
-	/// </summary>
-	int32 m_zk;
 
 	///<summary>
 	/// プレイヤー1のパズルリスト

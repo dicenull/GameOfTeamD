@@ -53,18 +53,21 @@ public:
 		// プレイヤーの大きさを設定
 		for (auto& p : m_data->players)
 		{
-			p.Shape.r = m_data->field.Zk() / 2 - 1;
+			p.Shape.r = MyGame::Zk / 2 - 1;
 		}
 	}
 
 	void update() override
 	{
+		// ブロックを出現させる
 		if (Input::KeyB.clicked)
 		{
 			m_data->b_manager.CreateBlock(PlayerType::One, m_i, m_data->b1, m_data->field);
 			m_data->b_manager.CreateBlock(PlayerType::Two, m_i, m_data->b1, m_data->field);
 
-			m_i = (m_i < m_data->field.Height() / m_data->field.Zk() - 2) ? m_i + 1 : 0;
+			m_i = (m_i < m_data->field.Height() / MyGame::Zk - 2) ? m_i + 1 : 0;
+
+			m_data->b1.TurnRight();
 		}
 
 		// フィールドの向きを反転し、プレイヤーの位置を戻す
@@ -113,7 +116,7 @@ public:
 		// プレイヤー2のスコアを描画
 		m_data->font(m_data->players[1].Score()).drawCenter(Point(Window::Size().x - Window::Size().x / 5.0, Window::Center().y));
 
-		m_data->b_manager.DrawBlocks(m_data->field);
+		m_data->b_manager.DrawBlocks();
 
 		// プレイヤーを描画
 		m_data->players[0].Shape.draw();
