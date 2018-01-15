@@ -50,9 +50,10 @@ public:
 	{
 		m_data->timer.start();
 
+		// プレイヤーの大きさを設定
 		for (auto& p : m_data->players)
 		{
-			p.Shape.r = m_data->field.Zk() / 2;
+			p.Shape.r = m_data->field.Zk() / 2 - 1;
 		}
 	}
 
