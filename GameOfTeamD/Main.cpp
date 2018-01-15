@@ -62,6 +62,7 @@ public:
 		if (Input::KeyB.clicked)
 		{
 			m_data->b_manager.CreateBlock(PlayerType::One, m_i, m_data->b1, m_data->field);
+			m_data->b_manager.CreateBlock(PlayerType::Two, m_i, m_data->b1, m_data->field);
 
 			m_i = (m_i < m_data->field.Height() / m_data->field.Zk() - 2) ? m_i + 1 : 0;
 		}
