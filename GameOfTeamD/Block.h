@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Action.h"
 #include "PieceType.h"
+#include "GameLib.h"
 
 class Block
 {
@@ -38,7 +39,7 @@ public:
 	///<summary>
 	/// ブロックの各ピースを取得する
 	///</summary>
-	Array<Rect> GetPieces(int32 zk) const;
+	Array<Rect> GetPieces() const;
 
 	///<summary>
 	/// ブロックを右に90度回転する
@@ -67,11 +68,16 @@ public:
 	void Move(Action action);
 
 	///<summary>
-	/// zkを指定してブロックを描画する
+	/// ブロックを描画する
 	///</summary>
-	///<param name="zk">一マス当たりの大きさ</param>
 	///<param name="origin">パズルフィールドの原点</param>
-	void Draw(Point origin, int32 zk) const;
+	void Draw(Point origin) const;
+
+	template <class Shape>
+	bool Intersects(const Shape& shape) const;
+
+	template <class Shape>
+	bool Contains(const Shape& shape) const;
 
 private:
 	///<summary>
@@ -89,3 +95,31 @@ private:
 	///</summary>
 	Point m_pos;
 };
+
+template<class Shape>
+inline bool Block::Intersects(const Shape & shape) const
+{
+	for (auto piece : GetPieces())
+	{
+		if (piece.intersects(shape))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+template<class Shape>
+inline bool Block::Contains(const Shape & shape) const
+{
+	for (auto piece : GetPieces())
+	{
+		if (piece.contains(shape))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}

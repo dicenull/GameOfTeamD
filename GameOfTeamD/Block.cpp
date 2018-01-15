@@ -44,9 +44,10 @@ Grid<Color> Block::GetColor() const
 	return colors;
 }
 
-Array<Rect> Block::GetPieces(int32 zk) const
+Array<Rect> Block::GetPieces() const
 {
 	Array<Rect> pieces;
+	int zk = MyGame::Zk;
 
 	for (int i = 0; i < length; i++)
 	{
@@ -117,9 +118,10 @@ void Block::Move(Action action)
 	}
 }
 
-void Block::Draw(Point origin, int32 zk) const
+void Block::Draw(Point origin) const
 {
 	Rect r;
+	int zk = MyGame::Zk;
 	for (int i = 0; i < length; i++)
 	{
 		for (int j = 0; j < length; j++)
