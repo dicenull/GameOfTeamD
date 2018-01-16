@@ -54,6 +54,8 @@ public:
 	///</summary>
 	int32 Height() const;
 
+	int32 HeightCount() const;
+
 	///<summary>
 	/// パズルフィールドとプレイヤーフィールドの幅を合わせた大きさを取得する
 	///</summary>

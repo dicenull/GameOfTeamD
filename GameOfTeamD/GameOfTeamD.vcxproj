@@ -285,6 +285,7 @@
     <ClInclude Include="Action.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="BlockManager.h" />
+    <ClInclude Include="BlockTemplate.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="Field.h" />
     <ClInclude Include="GameLib.h" />

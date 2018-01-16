@@ -69,6 +69,15 @@ void Field::SetBlock(PlayerType p, Block block)
 		else
 		{
 			// GameOver
+			// Ç∆ÇËÇ†Ç¶Ç∏ÉçÉOï\é¶
+			if (p == PlayerType::One)
+			{
+				Println(L"Winner : Player 2");
+			}
+			else
+			{
+				Println(L"Winner : Player 1");
+			}
 		}
 	}
 }
@@ -130,6 +139,11 @@ Field::~Field()
 int32 Field::Height() const
 {
 	return m_field_height * MyGame::Zk;
+}
+
+int32 Field::HeightCount() const
+{
+	return m_field_height;
 }
 
 int32 Field::Width() const

@@ -4,6 +4,7 @@
 #include "Block.h"
 #include "PlayerLib.h"
 #include "Field.h"
+#include "BlockTemplate.h"
 
 class BlockManager
 {
@@ -43,5 +44,7 @@ private:
 	/// プレイヤーごとのブロック
 	///</summary>
 	std::map<PlayerType, Array<Block>> m_blocks;
+
+	Stopwatch m_sw{ true };
 };
 

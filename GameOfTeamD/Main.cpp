@@ -20,7 +20,6 @@ struct CommonData
 	};
 
 	BlockManager b_manager{};
-	Block b1{ Grid<PieceType>(2, 2, Array<PieceType>({ PieceType::None, PieceType::Red, PieceType::Blue, PieceType::Green })) };
 };
 
 using MyApp = SceneManager<String, CommonData>;
@@ -59,17 +58,6 @@ public:
 
 	void update() override
 	{
-		// ブロックを出現させる
-		if (Input::KeyB.clicked)
-		{
-			m_data->b_manager.CreateBlock(PlayerType::One, m_i, m_data->b1, m_data->field);
-			m_data->b_manager.CreateBlock(PlayerType::Two, m_i, m_data->b1, m_data->field);
-
-			m_i = (m_i < m_data->field.Height() / MyGame::Zk - 2) ? m_i + 1 : 0;
-
-			m_data->b1.TurnRight();
-		}
-
 		// フィールドの向きを反転し、プレイヤーの位置を戻す
 		if (Input::KeyF.clicked)
 		{

@@ -45,11 +45,14 @@ void BlockManager::Update(Field & field, const Player * players)
 				// プレイヤーがブロックを取得
 				if (block.Intersects(players[static_cast<int>(p)].Shape))
 				{
+					// フィールドにブロックを奥詰めで入れる
 					field.SetBlock(p, block);
+					// 移動してきたブロックは消去する
 					m_blocks[p].erase(m_blocks[p].begin() + i);
 				}
 				else
 				{
+					// プレイヤーが取得せず、フィールド内にあるブロックを動かす
 					block.Move(field.FieldDirection(p));
 				}
 			}
@@ -59,6 +62,31 @@ void BlockManager::Update(Field & field, const Player * players)
 				m_blocks[p].erase(m_blocks[p].begin() + i);
 			}
 		}
+	}
+
+	// 新しいブロックを生成する
+	if (m_sw.ms() >= 1000)
+	{
+		PlayerType p = RandomSelect({ PlayerType::One, PlayerType::Two });
+		Block block = RandomSelect({ BlockTemplate::LBlock });
+		int max_v = field.HeightCount() - block.MaxLength();
+		int height = Random<int>(0, max_v);
+
+		// ランダム回ランダム方向に回転する
+		for (int i = 0; i < Random(0, 4); i++)
+		{
+			if (RandomBool())
+			{
+				block.TurnLeft();
+			}
+			else
+			{
+				block.TurnRight();
+			}
+		}
+
+		CreateBlock(p, height, block, field);
+		m_sw.restart();
 	}
 }
 
