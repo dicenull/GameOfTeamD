@@ -8,12 +8,12 @@ Field::Field(int32 field_height, int32 puzzle_width, int32 player_width, std::ma
 	m_player_width = player_width;
 
 	// パズルのフィールドを初期化
-	m_p1_puzzles.resize(Size(puzzle_width, field_height));
-	m_p2_puzzles.resize(Size(puzzle_width, field_height));
-
-	m_is_mirror[PlayerType::One] = is_mirrors[PlayerType::One];
-	m_is_mirror[PlayerType::Two] = is_mirrors[PlayerType::Two];
-
+	for (auto p : { PlayerType::One, PlayerType::Two })
+	{
+		m_puzzles[p].resize(Size(puzzle_width, field_height));
+		m_is_mirror[p] = is_mirrors[p];
+		m_colors[p].resize(Size(puzzle_width, field_height), PieceType::None);
+	}
 }
 
 Field::Field(const Field & other)
@@ -26,8 +26,11 @@ void Field::operator=(const Field & other)
 	m_player_width = other.m_player_width;
 	m_puzzle_width = other.m_puzzle_width;
 	m_field_height = other.m_field_height;
-	m_p1_puzzles = other.m_p1_puzzles;
-	m_p2_puzzles = other.m_p2_puzzles;
+	for (auto p : { PlayerType::One, PlayerType::Two })
+	{
+		m_puzzles[p] = other.m_puzzles.at(p);
+		m_colors[p] = other.m_colors.at(p);
+	}
 }
 
 void Field::Update()
@@ -37,10 +40,37 @@ void Field::Update()
 
 void Field::SetBlock(PlayerType p, Block block)
 {
-	Grid<Rect> puzzles = ((p == PlayerType::One) ? m_p1_puzzles : m_p2_puzzles);
+	auto & colors = m_colors.at(p);
+	int b_origin = block.GetHeight();
 
 	// ブロックを奥詰めで追加する
-	Println(L"Set Block");
+	for (int i = 0; i < block.MaxLength(); i++)
+	{
+		// ブロックがフィールド内にあるか
+		// i列目のパズルの幅を計算する
+		int count = 0;
+		for (int j = 0; j < m_puzzle_width; j++)
+		{
+			if (colors[i + b_origin][j] == PieceType::None)
+			{
+				break;
+			}
+			count++;
+		}
+
+		if (m_puzzle_width - count >= block.MaxLength())
+		{
+			auto pieces = block.GetPieces(i);
+			for (int j = 0; j < pieces.size(); j++)
+			{
+				colors[i + b_origin][j + count] = pieces[j];
+			}
+		}
+		else
+		{
+			// GameOver
+		}
+	}
 }
 
 void Field::Draw() const
@@ -56,15 +86,22 @@ void Field::Draw() const
 	{
 		for (int h = 0; h < m_field_height; h++)
 		{
-			auto p1_puzzle = m_p1_puzzles[h][w];
-			auto p2_puzzle = m_p2_puzzles[h][w];
 			Point pos = Point(MyGame::Zk * w, MyGame::Zk * h);
+			
+			for (auto p : { PlayerType::One, PlayerType::Two })
+			{
+				int tmp = (m_is_mirror.at(p) ? m_puzzle_width - 1 - w : w);
+				auto puzzle = m_puzzles.at(p)[h][tmp];
+				auto piece_type = m_colors.at(p)[h][tmp];
+				
+				puzzle.set(PuzzleOrigin(p) + pos, size);
 
-			p1_puzzle.set(PuzzleOrigin(PlayerType::One) + pos, size);
-			p2_puzzle.set(PuzzleOrigin(PlayerType::Two) + pos, size);
-
-			p1_puzzle.drawFrame();
-			p2_puzzle.drawFrame();
+				if (piece_type != PieceType::None)
+				{
+					puzzle.draw(Piece::ColorParse(piece_type));
+				}
+				puzzle.drawFrame();
+			}
 		}
 	}
 

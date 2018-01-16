@@ -44,7 +44,7 @@ Grid<Color> Block::GetColor() const
 	return colors;
 }
 
-Array<Rect> Block::GetPieces() const
+Array<Rect> Block::GetAllPieces() const
 {
 	Array<Rect> pieces;
 	int zk = MyGame::Zk;
@@ -57,6 +57,21 @@ Array<Rect> Block::GetPieces() const
 			{
 				pieces.push_back(Rect(Point(m_pos.x + j * zk, m_pos.y + i * zk), Size(zk, zk)));
 			}
+		}
+	}
+
+	return pieces;
+}
+
+Array<PieceType> Block::GetPieces(int height) const
+{
+	Array<PieceType> pieces;
+
+	for (int i = 0; i < MaxLength(); i++)
+	{
+		if (m_pieces[i][height] != PieceType::None)
+		{
+			pieces.push_back(m_pieces[i][height]);
 		}
 	}
 
@@ -93,9 +108,15 @@ void Block::TurnLeft()
 	m_pieces.swap(tmp);
 }
 
-void Block::SetPos(const Point &pos)
+void Block::SetPos(int height, const Point &pos)
 {
 	m_pos = pos;
+	m_height = height;
+}
+
+int Block::GetHeight()
+{
+	return m_height;
 }
 
 Point Block::GetBottomLeft()

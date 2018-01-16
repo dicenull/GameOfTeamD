@@ -17,7 +17,7 @@ void BlockManager::CreateBlock(PlayerType p, int height, Block block, const Fiel
 	// ブロックがフィールドに入るように作成位置をずらす
 	int x = ((field.GetMirror(p)) ? 0 : -MyGame::Zk * Block::MaxLength());
 
-	block.SetPos(field.BlockStartPos(p) + Point(x, height * MyGame::Zk));
+	block.SetPos(height, field.BlockStartPos(p) + Point(x, height * MyGame::Zk));
 	m_blocks[p].push_back(block);
 }
 
@@ -31,7 +31,7 @@ void BlockManager::Update(Field & field, const Player * players)
 
 			// ブロックがフィールド内にあるか判定する
 			bool isin_field = true;
-			for (auto piece : block.GetPieces())
+			for (auto piece : block.GetAllPieces())
 			{
 				if (!field.IsInBlockField(p, piece))
 				{

@@ -5,6 +5,7 @@
 #include "Block.h"
 #include "PlayerLib.h"
 #include "Action.h"
+#include "PieceType.h"
 
 class Block;
 
@@ -217,15 +218,15 @@ private:
 	int32 m_player_width;
 
 	///<summary>
-	/// プレイヤー1のパズルリスト
+	/// プレイヤーのパズル図形
 	///</summary>
-	Grid<Rect> m_p1_puzzles;
+	std::map<PlayerType, Grid<Rect>> m_puzzles;
 
 	///<summary>
-	/// プレイヤー2のパズルリスト
+	/// プレイヤーのパズル色
 	///</summary>
-	Grid<Rect> m_p2_puzzles;
-	
+	std::map<PlayerType, Grid<PieceType>> m_colors;
+
 	///<summary>
 	/// 各プレイヤーのフィールドが反転しているか管理する
 	///</summary>

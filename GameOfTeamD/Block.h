@@ -39,7 +39,9 @@ public:
 	///<summary>
 	/// ブロックの各ピースを取得する
 	///</summary>
-	Array<Rect> GetPieces() const;
+	Array<Rect> GetAllPieces() const;
+
+	Array<PieceType> GetPieces(int heigt) const;
 
 	///<summary>
 	/// ブロックを右に90度回転する
@@ -54,7 +56,12 @@ public:
 	///<summary>
 	/// ブロックの左上の座標を設定する
 	///</summary>
-	void SetPos(const Point &pos);
+	void SetPos(int height, const Point &pos);
+
+	///<summary>
+	///ブロックのある高さを取得する
+	///</summary>
+	int GetHeight();
 
 	///<summary>
 	/// ブロックの左下の座標を取得する
@@ -94,12 +101,14 @@ private:
 	/// ブロックの左上の座標
 	///</summary>
 	Point m_pos;
+
+	int m_height;
 };
 
 template<class Shape>
 inline bool Block::Intersects(const Shape & shape) const
 {
-	for (auto piece : GetPieces())
+	for (auto piece : GetAllPieces())
 	{
 		if (piece.intersects(shape))
 		{
@@ -113,7 +122,7 @@ inline bool Block::Intersects(const Shape & shape) const
 template<class Shape>
 inline bool Block::Contains(const Shape & shape) const
 {
-	for (auto piece : GetPieces())
+	for (auto piece : GetAllPieces())
 	{
 		if (piece.contains(shape))
 		{
