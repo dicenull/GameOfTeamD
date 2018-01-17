@@ -44,7 +44,7 @@ void Field::SetBlock(PlayerType p, Block block)
 	int b_origin = block.GetHeight();
 
 	// ブロックを奥詰めで追加する
-	for (int i = 0; i < block.MaxLength(); i++)
+	for (int i = 0; i < block.GetSize().x; i++)
 	{
 		// ブロックがフィールド内にあるか
 		// i列目のパズルの幅を計算する
@@ -58,7 +58,7 @@ void Field::SetBlock(PlayerType p, Block block)
 			count++;
 		}
 
-		if (m_puzzle_width - count >= block.MaxLength())
+		if (m_puzzle_width - count >= block.GetSize().x)
 		{
 			auto pieces = block.GetPieces(i);
 			for (int j = 0; j < pieces.size(); j++)

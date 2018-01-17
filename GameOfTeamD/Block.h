@@ -25,11 +25,6 @@ public:
 	///</summary>
 	~Block();
 
-	///<summary>
-	/// ブロックの一辺の長さの最大値
-	///</summary>
-	static int MaxLength();
-
 public:
 	///<summary>
 	/// ブロックの色を取得する
@@ -59,9 +54,11 @@ public:
 	void SetPos(int height, const Point &pos);
 
 	///<summary>
-	///ブロックのある高さを取得する
+	/// フィールド内のブロックのある高さを取得する
 	///</summary>
 	int GetHeight();
+
+	Size GetSize();
 
 	///<summary>
 	/// ブロックの左下の座標を取得する
@@ -88,14 +85,9 @@ public:
 
 private:
 	///<summary>
-	/// ブロックの一辺の最大値
-	///</summary>
-	static const int length = 2;
-
-	///<summary>
 	/// ブロックの色データ
 	///</summary>
-	Grid<PieceType> m_pieces{ length, length };
+	Grid<PieceType> m_pieces;
 
 	///<summary>
 	/// ブロックの左上の座標
@@ -103,6 +95,7 @@ private:
 	Point m_pos;
 
 	int m_height;
+	Size m_size;
 };
 
 template<class Shape>

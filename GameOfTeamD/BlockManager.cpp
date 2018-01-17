@@ -15,7 +15,7 @@ BlockManager::~BlockManager()
 void BlockManager::CreateBlock(PlayerType p, int height, Block block, const Field & field)
 {
 	// ブロックがフィールドに入るように作成位置をずらす
-	int x = ((field.GetMirror(p)) ? 0 : -MyGame::Zk * Block::MaxLength());
+	int x = ((field.GetMirror(p)) ? 0 : -MyGame::Zk * block.GetSize().x);
 
 	block.SetPos(height, field.BlockStartPos(p) + Point(x, height * MyGame::Zk));
 	m_blocks[p].push_back(block);
@@ -65,11 +65,11 @@ void BlockManager::Update(Field & field, const Player * players)
 	}
 
 	// 新しいブロックを生成する
-	if (m_sw.ms() >= 1000)
+	if (m_sw.ms() >= 750)
 	{
 		PlayerType p = RandomSelect({ PlayerType::One, PlayerType::Two });
-		Block block = RandomSelect({ BlockTemplate::LBlock });
-		int max_v = field.HeightCount() - block.MaxLength();
+		Block block = RandomSelect({ BlockTemplate::RandomBlock(MyGame::GameLevel::Normal) });
+		int max_v = field.HeightCount() - block.GetSize().y;
 		int height = Random<int>(0, max_v);
 
 		// ランダム回ランダム方向に回転する
