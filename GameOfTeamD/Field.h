@@ -237,7 +237,16 @@ private:
 	///<summary>
 	/// posから繋がっている同じ色のピース数を取得する
 	///</summary>
-	int connectedPieceCount(PlayerType p, Point pos);
+	Array<Point> connectedPieceCount(PlayerType p, Point pos);
+
+	///<summary>
+	/// 4つ以上つながっているピースを判定し、消す
+	///</summary>
+	void clearPieces();
+
+	void updateFieldState();
+
+	EventTimer m_event_timer[2];
 };
 
 template<class Type>

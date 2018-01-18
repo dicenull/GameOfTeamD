@@ -14,6 +14,12 @@ Field::Field(int32 field_height, int32 puzzle_width, int32 player_width, std::ma
 		m_is_mirror[p] = is_mirrors[p];
 		m_colors[p].resize(Size(puzzle_width, field_height), PieceType::None);
 	}
+
+	for (auto & et : m_event_timer)
+	{
+		et.addEvent(L"ClearPiece", 200ms);
+		et.pause();
+	}
 }
 
 Field::Field(const Field & other)
@@ -36,6 +42,22 @@ void Field::operator=(const Field & other)
 void Field::Update()
 {
 	m_window = Window::Size();
+
+	// ピースのつながりを判定
+	clearPieces();
+
+	for (auto & et : m_event_timer)
+	{
+		if (et.onTriggered(L"ClearPiece"))
+		{
+			updateFieldState();
+			et.reset();
+			et.pause();
+		}
+
+		et.update();
+	}
+	
 }
 
 void Field::SetBlock(PlayerType p, Block block)
@@ -84,23 +106,6 @@ void Field::SetBlock(PlayerType p, Block block)
 			{
 				Println(L"Winner : Player 1");
 			}
-		}
-	}
-
-	for (int i = 0; i < m_puzzle_width; i++)
-	{
-		for (int j = 0; j < m_field_height; j++)
-		{
-			if (m_colors.at(p)[j][i] != PieceType::None)
-			{
-				int count = connectedPieceCount(p, Point(i, j));
-
-				if (count >= 4)
-				{
-					Println(L"Yeah!");
-				}
-			}
-
 		}
 	}
 }
@@ -484,9 +489,10 @@ bool Field::IsInField(PlayerType p, Point pos) const
 	return IsInPuzzleField(p, pos) || IsInPlayerField(p, pos) || IsInSpaceField(p, pos);
 }
 
-int Field::connectedPieceCount(PlayerType p, Point pos)
+Array<Point> Field::connectedPieceCount(PlayerType p, Point pos)
 {
-	int count = 1;
+	Array<Point> points;
+	points.push_back(pos);
 	auto & colors = m_colors[p];
 	auto color = colors[pos.y][pos.x];
 
@@ -494,22 +500,108 @@ int Field::connectedPieceCount(PlayerType p, Point pos)
 
 	if (pos.x + 1 < m_puzzle_width && colors[pos.y][pos.x + 1] == color)
 	{
-		count += connectedPieceCount(p, Point(pos.x + 1, pos.y));
+		for (auto _p : (connectedPieceCount(p, Point(pos.x + 1, pos.y))))
+		{
+			points.push_back(_p);
+		}
 	}
 	if (pos.y + 1 < m_field_height && colors[pos.y + 1][pos.x] == color)
 	{
-		count += connectedPieceCount(p, Point(pos.x, pos.y + 1));
+		for (auto _p : connectedPieceCount(p, Point(pos.x, pos.y + 1)))
+		{
+			points.push_back(_p);
+		}
 	}
 	if (pos.x - 1 >= 0 && colors[pos.y][pos.x - 1] == color)
 	{
-		count += connectedPieceCount(p, Point(pos.x - 1, pos.y));
+		for (auto _p : connectedPieceCount(p, Point(pos.x - 1, pos.y)))
+		{
+			points.push_back(_p);
+		}
 	}
 	if (pos.y - 1 >= 0 && colors[pos.y - 1][pos.x] == color)
 	{
-		count += connectedPieceCount(p, Point(pos.x, pos.y - 1));
+		for (auto _p : connectedPieceCount(p, Point(pos.x, pos.y - 1)))
+		{
+			points.push_back(_p);
+		}
 	}
 
 	colors[pos.y][pos.x] = color;
 
-	return count;
+	return points;
+}
+
+void Field::clearPieces()
+{
+	bool is_clear[2] = { false, false };
+	for (int i = 0; i < m_puzzle_width; i++)
+	{
+		for (int j = 0; j < m_field_height; j++)
+		{
+			for (auto p : { PlayerType::One, PlayerType::Two })
+			{
+				if (m_colors.at(p)[j][i] != PieceType::None)
+				{
+					Array<Point> points = connectedPieceCount(p, Point(i, j));
+
+					// 四つ以上つながったピースを消す
+					if (points.size() >= 4)
+					{
+						for (auto pos : points)
+						{
+							m_colors.at(p)[pos.y][pos.x] = PieceType::None;
+						}
+
+						is_clear[static_cast<int>(p)] = true;
+					}
+				}
+			}
+		}
+	}
+
+	// 空いた隙間を時間をおいて詰める
+	for (int i = 0; i < 2; i++)
+	{
+		if (is_clear[i])
+		{
+			m_event_timer[i].start();
+		}
+	}
+}
+
+void Field::updateFieldState()
+{
+	Println(L"Update");
+	for (auto p : { PlayerType::One, PlayerType::Two })
+	{
+		auto & colors = m_colors.at(p);
+		for (int h = 0; h < m_field_height; h++)
+		{
+			for (int w = 0; w < m_puzzle_width; w++)
+			{
+				if (colors[h][w] == PieceType::None)
+				{
+					// 1マス列を詰める
+					bool is_color = false;
+					for (int i = w + 1; i < m_puzzle_width; i++)
+					{
+						colors[h][i - 1] = colors[h][i];
+
+						if (colors[h][i] != PieceType::None)
+						{
+							is_color = true;
+						}
+					}
+					colors[h][m_puzzle_width - 1] = PieceType::None;
+
+					// 奥に色があったら同じ場所から再走査
+					if (is_color)
+					{
+						w--;
+					}
+				}
+			}
+		}
+	}
 }
