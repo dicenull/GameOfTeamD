@@ -6,6 +6,7 @@ Block::Block()
 {
 	m_pieces.fill(PieceType::None);
 	m_pos = Point();
+	m_is_black = false;
 }
 
 Block::Block(Grid<PieceType> pieces)
@@ -14,6 +15,16 @@ Block::Block(Grid<PieceType> pieces)
 	m_pieces.swap(pieces);
 	m_pos = Point();
 	m_size = m_pieces.size();
+
+	m_is_black = true;
+	for (auto piece : m_pieces)
+	{
+		if (piece != PieceType::None && piece != PieceType::Black)
+		{
+			m_is_black = false;
+			break;
+		}
+	}
 }
 
 Block::~Block()
@@ -49,7 +60,7 @@ Array<Rect> Block::GetAllPieces() const
 		{
 			if (m_pieces[j][i] != PieceType::None)
 			{
-				pieces.push_back(Rect(Point(m_pos.x + j * zk, m_pos.y + i * zk), Size(zk, zk)));
+				pieces.push_back(Rect(Point(m_pos.x + i * zk, m_pos.y + j * zk), Size(zk, zk)));
 			}
 		}
 	}
@@ -63,9 +74,9 @@ Array<PieceType> Block::GetPieces(int height) const
 
 	for (int i = 0; i < m_size.x; i++)
 	{
-		if (m_pieces[i][height] != PieceType::None)
+		if (m_pieces[height][i] != PieceType::None)
 		{
-			pieces.push_back(m_pieces[i][height]);
+			pieces.push_back(m_pieces[height][i]);
 		}
 	}
 
@@ -125,13 +136,20 @@ Point Block::GetBottomLeft()
 
 void Block::Move(Action action)
 {
+	int speed = 1;
+	if (m_is_black)
+	{
+		//////////// •F‚Í‘‚­‚·‚é
+		speed = 1;
+	}
+
 	switch (action)
 	{
 	case Action::Left:
-		m_pos.moveBy(Point::Left);
+		m_pos.moveBy(Point::Left * speed);
 		break;
 	case Action::Right:
-		m_pos.moveBy(Point::Right);
+		m_pos.moveBy(Point::Right * speed);
 		break;
 	default:
 		break;
@@ -147,9 +165,9 @@ void Block::Draw(Point origin) const
 		for (int j = 0; j < m_size.y; j++)
 		{
 			r = Rect(origin + Point(m_pos.x + i * zk, m_pos.y + j * zk), zk, zk);
-			if (m_pieces[i][j] != PieceType::None)
+			if (m_pieces[j][i] != PieceType::None)
 			{
-				r.draw(Piece::ColorParse(m_pieces[i][j]));
+				r.draw(Piece::ColorParse(m_pieces[j][i]));
 				r.drawFrame();
 			}
 		}

@@ -46,6 +46,7 @@ void Field::Update()
 	// ピースのつながりを判定
 	clearPieces();
 
+	// ピースが消えていたらその分マスを詰める
 	for (auto & et : m_event_timer)
 	{
 		if (et.onTriggered(L"ClearPiece"))
@@ -66,7 +67,7 @@ void Field::SetBlock(PlayerType p, Block block)
 	int b_origin = block.GetHeight();
 
 	// ブロックを奥詰めで追加する
-	for (int i = 0; i < block.GetSize().x; i++)
+	for (int i = 0; i < block.GetSize().y; i++)
 	{
 		// ブロックがフィールド内にあるか
 		// i列目のパズルの幅を計算する
@@ -133,10 +134,7 @@ void Field::Draw() const
 				
 				puzzle.set(PuzzleOrigin(p) + pos, size);
 
-				if (piece_type != PieceType::None)
-				{
-					puzzle.draw(Piece::ColorParse(piece_type));
-				}
+				puzzle.draw(Piece::ColorParse(piece_type));
 				puzzle.drawFrame();
 			}
 		}
@@ -541,17 +539,21 @@ void Field::clearPieces()
 		{
 			for (auto p : { PlayerType::One, PlayerType::Two })
 			{
-				if (m_colors.at(p)[j][i] != PieceType::None)
+				auto & colors = m_colors.at(p);
+				if (colors[j][i] != PieceType::None && colors[j][i] != PieceType::Black)
 				{
-					Array<Point> points = connectedPieceCount(p, Point(i, j));
-
+					auto points = connectedPieceCount(p, Point(i, j));
+					
 					// 四つ以上つながったピースを消す
 					if (points.size() >= 4)
 					{
 						for (auto pos : points)
 						{
-							m_colors.at(p)[pos.y][pos.x] = PieceType::None;
+							colors[pos.y][pos.x] = PieceType::None;
 						}
+
+						// 相手に送る黒ブロックを生成する
+						createBlackBlock(p, points);
 
 						is_clear[static_cast<int>(p)] = true;
 					}
@@ -604,4 +606,52 @@ void Field::updateFieldState()
 			}
 		}
 	}
+}
+
+void Field::createBlackBlock(PlayerType p, Array<Point> points)
+{
+	Point min{ m_puzzle_width - 1, m_field_height - 1 }, max{ 0,0 };
+
+	for (auto p : points)
+	{
+		if (p.x < min.x)
+		{
+			min.x = p.x;
+		}
+
+		if (p.x > max.x)
+		{
+			max.x = p.x;
+		}
+
+		if (p.y < min.y)
+		{
+			min.y = p.y;
+		}
+
+		if (p.y > max.y)
+		{
+			max.y = p.y;
+		}
+	}
+
+	int w = max.x - min.x + 1, h = max.y - min.y + 1;
+	Grid<PieceType> pieces{ Size(w, h), PieceType::None };
+
+	for (auto p : points)
+	{
+		pieces[p.x - min.x][p.y - min.y] = PieceType::Black;
+	}
+
+	// 相手のプレイヤーのリストに黒ブロックを追加する
+	if (p == PlayerType::One)
+	{
+		p = PlayerType::Two;
+	}
+	else
+	{
+		p = PlayerType::One;
+	}
+
+	BlackBlocks[p].push_back({ Block{pieces}, min.y });
 }

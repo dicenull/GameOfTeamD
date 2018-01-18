@@ -34,6 +34,9 @@ public:
 	~Field();
 
 public:
+	std::map<PlayerType, Array<std::pair<Block, int>>> BlackBlocks;
+
+public:
 	///<summary>
 	/// フィールドを描画する
 	///</summary>
@@ -234,19 +237,22 @@ private:
 	///</summary>
 	std::map<PlayerType, bool> m_is_mirror;
 
-	///<summary>
-	/// posから繋がっている同じ色のピース数を取得する
-	///</summary>
-	Array<Point> connectedPieceCount(PlayerType p, Point pos);
-
-	///<summary>
-	/// 4つ以上つながっているピースを判定し、消す
-	///</summary>
-	void clearPieces();
-
-	void updateFieldState();
-
 	EventTimer m_event_timer[2];
+
+private:
+		///<summary>
+		/// posから繋がっている同じ色のピース数を取得する
+		///</summary>
+		Array<Point> connectedPieceCount(PlayerType p, Point pos);
+
+		///<summary>
+		/// 4つ以上つながっているピースを判定し、消す
+		///</summary>
+		void clearPieces();
+
+		void updateFieldState();
+
+		void createBlackBlock(PlayerType p, Array<Point> points);
 };
 
 template<class Type>

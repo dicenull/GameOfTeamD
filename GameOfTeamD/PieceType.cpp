@@ -16,6 +16,10 @@ Color Piece::ColorParse(PieceType p)
 		return Palette::Purple;
 	case PieceType::Black:
 		return Palette::Black;
+
+
+	case PieceType::None:
+		return Palette::Lightgrey;
 	}
 
 	return Color(11, 22, 33);

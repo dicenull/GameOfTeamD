@@ -96,6 +96,7 @@ private:
 
 	int m_height;
 	Size m_size;
+	bool m_is_black;
 };
 
 template<class Shape>

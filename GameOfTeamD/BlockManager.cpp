@@ -72,21 +72,19 @@ void BlockManager::Update(Field & field, const Player * players)
 		int max_v = field.HeightCount() - block.GetSize().y;
 		int height = Random<int>(0, max_v);
 
-		// ランダム回ランダム方向に回転する
-		for (int i = 0; i < Random(0, 4); i++)
-		{
-			if (RandomBool())
-			{
-				block.TurnLeft();
-			}
-			else
-			{
-				block.TurnRight();
-			}
-		}
-
 		CreateBlock(p, height, block, field);
 		m_sw.restart();
+	}
+	
+	// 黒ブロックを生成する
+	for (auto p : { PlayerType::One, PlayerType::Two })
+	{
+		for (auto b_block : field.BlackBlocks[p])
+		{
+			CreateBlock(p, b_block.second, b_block.first, field);
+		}
+
+		field.BlackBlocks[p].clear();
 	}
 }
 
