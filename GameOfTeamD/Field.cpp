@@ -86,6 +86,23 @@ void Field::SetBlock(PlayerType p, Block block)
 			}
 		}
 	}
+
+	for (int i = 0; i < m_puzzle_width; i++)
+	{
+		for (int j = 0; j < m_field_height; j++)
+		{
+			if (m_colors.at(p)[j][i] != PieceType::None)
+			{
+				int count = connectedPieceCount(p, Point(i, j));
+
+				if (count >= 4)
+				{
+					Println(L"Yeah!");
+				}
+			}
+
+		}
+	}
 }
 
 void Field::Draw() const
@@ -470,29 +487,29 @@ bool Field::IsInField(PlayerType p, Point pos) const
 int Field::connectedPieceCount(PlayerType p, Point pos)
 {
 	int count = 1;
-	auto colors = m_colors[p];
-	auto color = colors[pos.x][pos.y];
+	auto & colors = m_colors[p];
+	auto color = colors[pos.y][pos.x];
 
-	colors[pos.x][pos.y] = PieceType::None;
+	colors[pos.y][pos.x] = PieceType::None;
 
-	if (pos.x + 1 < m_puzzle_width && colors[pos.x + 1][pos.y] == color)
+	if (pos.x + 1 < m_puzzle_width && colors[pos.y][pos.x + 1] == color)
 	{
 		count += connectedPieceCount(p, Point(pos.x + 1, pos.y));
 	}
-	if (pos.y + 1 < m_field_height && colors[pos.x][pos.y + 1] == color)
+	if (pos.y + 1 < m_field_height && colors[pos.y + 1][pos.x] == color)
 	{
 		count += connectedPieceCount(p, Point(pos.x, pos.y + 1));
 	}
-	if (pos.x - 1 >= 0 && colors[pos.x - 1][pos.y] == color)
+	if (pos.x - 1 >= 0 && colors[pos.y][pos.x - 1] == color)
 	{
 		count += connectedPieceCount(p, Point(pos.x - 1, pos.y));
 	}
-	if (pos.y - 1 >= 0 && colors[pos.x][pos.y - 1] == color)
+	if (pos.y - 1 >= 0 && colors[pos.y - 1][pos.x] == color)
 	{
 		count += connectedPieceCount(p, Point(pos.x, pos.y - 1));
 	}
 
-	colors[pos.x][pos.y] = color;
+	colors[pos.y][pos.x] = color;
 
 	return count;
 }
