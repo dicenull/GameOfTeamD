@@ -61,6 +61,12 @@ void Field::SetBlock(PlayerType p, Block block)
 		if (m_puzzle_width - count >= block.GetSize().x)
 		{
 			auto pieces = block.GetPieces(i);
+			
+			if (m_is_mirror.at(p))
+			{
+				std::reverse(pieces.begin(), pieces.end());
+			}
+
 			for (int j = 0; j < pieces.size(); j++)
 			{
 				colors[i + b_origin][j + count] = pieces[j];
@@ -459,4 +465,34 @@ bool Field::IsInSpaceField(PlayerType p, Point pos)const
 bool Field::IsInField(PlayerType p, Point pos) const
 {
 	return IsInPuzzleField(p, pos) || IsInPlayerField(p, pos) || IsInSpaceField(p, pos);
+}
+
+int Field::connectedPieceCount(PlayerType p, Point pos)
+{
+	int count = 1;
+	auto colors = m_colors[p];
+	auto color = colors[pos.x][pos.y];
+
+	colors[pos.x][pos.y] = PieceType::None;
+
+	if (pos.x + 1 < m_puzzle_width && colors[pos.x + 1][pos.y] == color)
+	{
+		count += connectedPieceCount(p, Point(pos.x + 1, pos.y));
+	}
+	if (pos.y + 1 < m_field_height && colors[pos.x][pos.y + 1] == color)
+	{
+		count += connectedPieceCount(p, Point(pos.x, pos.y + 1));
+	}
+	if (pos.x - 1 >= 0 && colors[pos.x - 1][pos.y] == color)
+	{
+		count += connectedPieceCount(p, Point(pos.x - 1, pos.y));
+	}
+	if (pos.y - 1 >= 0 && colors[pos.x][pos.y - 1] == color)
+	{
+		count += connectedPieceCount(p, Point(pos.x, pos.y - 1));
+	}
+
+	colors[pos.x][pos.y] = color;
+
+	return count;
 }

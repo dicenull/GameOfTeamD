@@ -233,6 +233,11 @@ private:
 	/// 各プレイヤーのフィールドが反転しているか管理する
 	///</summary>
 	std::map<PlayerType, bool> m_is_mirror;
+
+	///<summary>
+	/// posから繋がっている同じ色のピース数を取得する
+	///</summary>
+	int connectedPieceCount(PlayerType p, Point pos);
 };
 
 template<class Type>
