@@ -45,10 +45,16 @@ public:
 	///</summary>
 	int Score();
 
+	void AddScore();
+
 	///<summary>
 	/// プレイヤー番号を取得する
 	///</summary>
 	PlayerType GetPlayerType();
+
+	void SetWinner();
+
+	bool IsWinner();
 
 private:
 	///<summary>
@@ -60,5 +66,10 @@ private:
 	/// 番号のデータ
 	///</summary>
 	PlayerType m_player_type;
+
+	///<summary>
+	/// ゲームに勝利したか
+	///</summary>
+	bool m_is_winner = false;
 };
 

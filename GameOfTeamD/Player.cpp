@@ -53,7 +53,22 @@ int Player::Score()
 	return m_score;
 }
 
+void Player::AddScore()
+{
+	m_score++;
+}
+
 PlayerType Player::GetPlayerType()
 {
 	return m_player_type;
+}
+
+void Player::SetWinner()
+{
+	m_is_winner = true;
+}
+
+bool Player::IsWinner()
+{
+	return m_is_winner;
 }

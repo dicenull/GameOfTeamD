@@ -11,7 +11,8 @@ struct CommonData
 {
 	Field field{};
 	Stopwatch timer;
-	Font font{ 25 };
+	Font main_font{ 25 };
+	Font small_font{ 15 };
 	// プレイヤーフィールドの中心にプレイヤーの位置を設定する
 	Player players[2] = 
 	{ 
@@ -38,7 +39,7 @@ public:
 
 	void draw() const override
 	{
-		m_data->font(L"お宅の庭敷き詰めます").drawCenter(Window::Center());
+		m_data->main_font(L"お宅の庭敷き詰めます").drawCenter(Window::Center());
 	}
 };
 
@@ -89,8 +90,12 @@ public:
 		if (Input::KeyS.pressed) m_data->players[1].Move(Action::Down, m_data->field);
 
 		// ブロックを動かす
-		m_data->b_manager.Update(m_data->field, m_data->players);
-		m_data->field.Update();
+		if (m_data->b_manager.Update(m_data->field, m_data->players))
+		{
+			m_data->timer.pause();
+			changeScene(L"Result");
+		}
+		m_data->field.Update(m_data->players);
 	}
 
 	void draw() const override
@@ -98,11 +103,11 @@ public:
 		m_data->field.Draw();
 
 		// タイムを描画
-		m_data->font(L"Time : ", m_data->timer.s(), L"[s]").drawCenter(Window::Center());
+		m_data->main_font(L"Time : ", m_data->timer.s(), L"[s]").drawCenter(Window::Center());
 		// プレイヤー1のスコアを描画
-		m_data->font(m_data->players[0].Score()).drawCenter(Point(Window::Center().x / 5.0, Window::Center().y));
+		m_data->main_font(m_data->players[0].Score()).drawCenter(Point(Window::Center().x / 5.0, Window::Center().y));
 		// プレイヤー2のスコアを描画
-		m_data->font(m_data->players[1].Score()).drawCenter(Point(Window::Size().x - Window::Size().x / 5.0, Window::Center().y));
+		m_data->main_font(m_data->players[1].Score()).drawCenter(Point(Window::Size().x - Window::Size().x / 5.0, Window::Center().y));
 
 		m_data->b_manager.DrawBlocks();
 
@@ -117,11 +122,6 @@ private:
 class Result : public MyApp::Scene
 {
 public :
-	void init() override
-	{
-
-	}
-
 	void update() override
 	{
 
@@ -129,7 +129,26 @@ public :
 
 	void draw() const override
 	{
+		String win_str;
+		if (m_data->players[0].IsWinner())
+		{
+			win_str = L"Player 1";
+		}
+		else
+		{
+			win_str = L"Player 2";
+		}
 
+		m_data->main_font(win_str, L"の勝ち！").drawCenter(Window::Center());
+
+		// タイムを描画
+		m_data->small_font(L"Time : ", m_data->timer.s(), L"[s]").drawCenter(Window::Center() + Point(0, 50));
+		// プレイヤー1のスコアを描画
+		m_data->main_font(m_data->players[0].Score()).drawCenter(Point(Window::Center().x / 5.0, Window::Center().y));
+		// プレイヤー2のスコアを描画
+		m_data->main_font(m_data->players[1].Score()).drawCenter(Point(Window::Size().x - Window::Size().x / 5.0, Window::Center().y));
+
+		m_data->field.Draw();
 	}
 };
 
@@ -139,6 +158,7 @@ void Main()
 
 	manager.add<Title>(L"Title");
 	manager.add<Game>(L"Game");
+	manager.add<Result>(L"Result");
 
 	while (System::Update())
 	{

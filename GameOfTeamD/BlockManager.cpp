@@ -21,7 +21,7 @@ void BlockManager::CreateBlock(PlayerType p, int height, Block block, const Fiel
 	m_blocks[p].push_back(block);
 }
 
-void BlockManager::Update(Field & field, const Player * players)
+bool BlockManager::Update(Field & field, Player * players)
 {
 	for (PlayerType p : {PlayerType::One, PlayerType::Two})
 	{
@@ -46,7 +46,20 @@ void BlockManager::Update(Field & field, const Player * players)
 				if (block.Intersects(players[static_cast<int>(p)].Shape))
 				{
 					// フィールドにブロックを奥詰めで入れる
-					field.SetBlock(p, block);
+					if (!field.SetBlock(p, block))
+					{
+						// ブロックがフィールド外に出た場合GameOver
+						if (p == PlayerType::One)
+						{
+							players[static_cast<int>(PlayerType::Two)].SetWinner();
+						}
+						else
+						{
+							players[static_cast<int>(PlayerType::One)].SetWinner();
+						}
+
+						return true;
+					}
 					// 移動してきたブロックは消去する
 					m_blocks[p].erase(m_blocks[p].begin() + i);
 				}
@@ -86,6 +99,8 @@ void BlockManager::Update(Field & field, const Player * players)
 
 		field.BlackBlocks[p].clear();
 	}
+
+	return false;
 }
 
 void BlockManager::DrawBlocks() const

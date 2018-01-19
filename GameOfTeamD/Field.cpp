@@ -39,12 +39,12 @@ void Field::operator=(const Field & other)
 	}
 }
 
-void Field::Update()
+void Field::Update(Player * players)
 {
 	m_window = Window::Size();
 
 	// ピースのつながりを判定
-	clearPieces();
+	clearPieces(players);
 
 	// ピースが消えていたらその分マスを詰める
 	for (auto & et : m_event_timer)
@@ -61,7 +61,7 @@ void Field::Update()
 	
 }
 
-void Field::SetBlock(PlayerType p, Block block)
+bool Field::SetBlock(PlayerType p, Block block)
 {
 	auto & colors = m_colors.at(p);
 	int b_origin = block.GetHeight();
@@ -97,18 +97,11 @@ void Field::SetBlock(PlayerType p, Block block)
 		}
 		else
 		{
-			// GameOver
-			// とりあえずログ表示
-			if (p == PlayerType::One)
-			{
-				Println(L"Winner : Player 2");
-			}
-			else
-			{
-				Println(L"Winner : Player 1");
-			}
+			return false;
 		}
 	}
+
+	return true;
 }
 
 void Field::Draw() const
@@ -532,7 +525,7 @@ Array<Point> Field::connectedPieceCount(PlayerType p, Point pos)
 	return points;
 }
 
-void Field::clearPieces()
+void Field::clearPieces(Player * players)
 {
 	bool is_clear[2] = { false, false };
 	for (auto p : { PlayerType::One, PlayerType::Two })
@@ -550,6 +543,9 @@ void Field::clearPieces()
 					// 四つ以上つながったピースを消す
 					if (points.size() >= 4)
 					{
+						// ピースを消したポイントを加算
+						players[static_cast<int>(p)].AddScore();
+
 						for (auto pos : points)
 						{
 							colors[pos.y][pos.x] = PieceType::None;

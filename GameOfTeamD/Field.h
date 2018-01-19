@@ -8,6 +8,7 @@
 #include "PieceType.h"
 
 class Block;
+class Player;
 
 class Field
 {
@@ -45,12 +46,13 @@ public:
 	///<summary>
 	/// フィールドの状態を更新する
 	///</summary>
-	void Update();
+	void Update(Player * players);
 
 	///<summary>
 	/// フィールドにブロックを追加する
 	///</summary>
-	void SetBlock(PlayerType p, Block block);
+	///<returns>ブロックがフィールドに追加できたか</returns>
+	bool SetBlock(PlayerType p, Block block);
 
 	///<summary>
 	/// フィールドの高さを取得する
@@ -250,7 +252,7 @@ private:
 		///<summary>
 		/// 4つ以上つながっているピースを判定し、消す
 		///</summary>
-		void clearPieces();
+		void clearPieces(Player * players);
 
 		void updateFieldState();
 
