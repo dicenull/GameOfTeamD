@@ -10,9 +10,9 @@ Field::Field(int32 field_height, int32 puzzle_width, int32 player_width, std::ma
 	// パズルのフィールドを初期化
 	for (auto p : { PlayerType::One, PlayerType::Two })
 	{
-		m_puzzles[p].resize(Size(puzzle_width, field_height));
+		m_puzzles[p].resize(Size(puzzle_width * 2, field_height));
 		m_is_mirror[p] = is_mirrors[p];
-		m_colors[p].resize(Size(puzzle_width, field_height), PieceType::None);
+		m_colors[p].resize(Size(puzzle_width * 2, field_height), PieceType::None);
 	}
 
 	for (auto & et : m_event_timer)
@@ -65,10 +65,12 @@ bool Field::SetBlock(PlayerType p, Block block)
 {
 	auto & colors = m_colors.at(p);
 	int b_origin = block.GetHeight();
+	bool is_all_set = true;
 
 	// ブロックを奥詰めで追加する
 	for (int i = 0; i < block.GetSize().y; i++)
 	{
+		auto pieces = block.GetPieces(i);
 		// ブロックがフィールド内にあるか
 		// i列目のパズルの幅を計算する
 		int count = 0;
@@ -81,27 +83,24 @@ bool Field::SetBlock(PlayerType p, Block block)
 			count++;
 		}
 
-		if (m_puzzle_width - count >= block.GetSize().x)
+		if (m_is_mirror.at(p))
 		{
-			auto pieces = block.GetPieces(i);
-			
-			if (m_is_mirror.at(p))
-			{
-				std::reverse(pieces.begin(), pieces.end());
-			}
-
-			for (int j = 0; j < pieces.size(); j++)
-			{
-				colors[i + b_origin][j + count] = pieces[j];
-			}
+			std::reverse(pieces.begin(), pieces.end());
 		}
-		else
+
+		// ブロックをフィールドにセットする
+		for (int j = 0; j < pieces.size(); j++)
 		{
-			return false;
+			colors[i + b_origin][j + count] = pieces[j];
+		}
+
+		if (pieces.size() + count > m_puzzle_width)
+		{
+			is_all_set = false;
 		}
 	}
 
-	return true;
+	return is_all_set;
 }
 
 void Field::Draw() const
@@ -113,7 +112,7 @@ void Field::Draw() const
 	Size size = Size(MyGame::Zk, MyGame::Zk);
 
 	// パズルフィールドを描画
-	for (int w = 0; w < m_puzzle_width; w++)
+	for (int w = 0; w < m_puzzle_width * 2; w++)
 	{
 		for (int h = 0; h < m_field_height; h++)
 		{
@@ -127,8 +126,17 @@ void Field::Draw() const
 				
 				puzzle.set(PuzzleOrigin(p) + pos, size);
 
-				puzzle.draw(Piece::ColorParse(piece_type));
-				puzzle.drawFrame();
+				if (w < m_puzzle_width)
+				{
+					puzzle.draw(Piece::ColorParse(piece_type));
+					puzzle.drawFrame();
+				}
+				else if (piece_type != PieceType::None)
+				{
+					puzzle.draw(Piece::ColorParse(piece_type));
+					puzzle.drawFrame(1.0, 0.0, Palette::Orange);
+				}
+				
 			}
 		}
 	}
