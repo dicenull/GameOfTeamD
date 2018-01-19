@@ -61,11 +61,6 @@ public:
 	Size GetSize();
 
 	///<summary>
-	/// ブロックの左下の座標を取得する
-	///</summary>
-	Point GetBottomLeft();
-
-	///<summary>
 	/// ブロックをフィールドに応じて動かす
 	///</summary>
 	///<param name="p">動かす方向[Action::Left, Action::Right]のみ</param>
@@ -95,7 +90,6 @@ private:
 	Point m_pos;
 
 	int m_height;
-	Size m_size;
 	bool m_is_black;
 };
 

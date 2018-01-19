@@ -14,7 +14,6 @@ Block::Block(Grid<PieceType> pieces)
 	m_pieces.resize(pieces.size());
 	m_pieces.swap(pieces);
 	m_pos = Point();
-	m_size = m_pieces.size();
 
 	m_is_black = true;
 	for (auto piece : m_pieces)
@@ -34,11 +33,11 @@ Block::~Block()
 
 Grid<Color> Block::GetColor() const
 {
-	Grid<Color> colors{ m_size };
+	Grid<Color> colors{ m_pieces.size() };
 	
-	for (int i = 0; i < m_size.x; i++)
+	for (int i = 0; i < m_pieces.size().x; i++)
 	{
-		for (int j = 0; j < m_size.y; j++)
+		for (int j = 0; j < m_pieces.size().y; j++)
 		{
 			PieceType p = m_pieces[j][i];
 			
@@ -54,9 +53,9 @@ Array<Rect> Block::GetAllPieces() const
 	Array<Rect> pieces;
 	int zk = MyGame::Zk;
 
-	for (int i = 0; i < m_size.x; i++)
+	for (int i = 0; i < m_pieces.size().x; i++)
 	{
-		for (int j = 0; j < m_size.y; j++)
+		for (int j = 0; j < m_pieces.size().y; j++)
 		{
 			if (m_pieces[j][i] != PieceType::None)
 			{
@@ -72,7 +71,7 @@ Array<PieceType> Block::GetPieces(int height) const
 {
 	Array<PieceType> pieces;
 
-	for (int i = 0; i < m_size.x; i++)
+	for (int i = 0; i < m_pieces.size().x; i++)
 	{
 		if (m_pieces[height][i] != PieceType::None)
 		{
@@ -85,13 +84,13 @@ Array<PieceType> Block::GetPieces(int height) const
 
 void Block::TurnRight()
 {
-	Grid<PieceType> tmp(m_size);
+	Grid<PieceType> tmp(m_pieces.size());
 
-	for (int i = 0; i < m_size.x; i++)
+	for (int i = 0; i < m_pieces.size().x; i++)
 	{
-		for (int j = 0; j < m_size.y; j++)
+		for (int j = 0; j < m_pieces.size().y; j++)
 		{
-			tmp[m_size.x - 1 - j][i] = m_pieces[i][j];
+			tmp[m_pieces.size().x - 1 - j][i] = m_pieces[i][j];
 		}
 	}
 
@@ -100,13 +99,13 @@ void Block::TurnRight()
 
 void Block::TurnLeft()
 {
-	Grid<PieceType> tmp(m_size);
+	Grid<PieceType> tmp(m_pieces.size());
 
-	for (int i = 0; i < m_size.x; i++)
+	for (int i = 0; i < m_pieces.size().x; i++)
 	{
-		for (int j = 0; j < m_size.y; j++)
+		for (int j = 0; j < m_pieces.size().y; j++)
 		{
-			tmp[j][m_size.y - 1 - i] = m_pieces[i][j];
+			tmp[j][m_pieces.size().y - 1 - i] = m_pieces[i][j];
 		}
 	}
 
@@ -126,12 +125,7 @@ int Block::GetHeight()
 
 Size Block::GetSize()
 {
-	return m_size;
-}
-
-Point Block::GetBottomLeft()
-{
-	return Point(m_pos.x, m_pos.y + (m_size.y - 1));
+	return m_pieces.size();
 }
 
 void Block::Move(Action action)
@@ -139,8 +133,7 @@ void Block::Move(Action action)
 	int speed = 1;
 	if (m_is_black)
 	{
-		//////////// •F‚Í‘‚­‚·‚é
-		speed = 1;
+		speed = 2;
 	}
 
 	switch (action)
@@ -160,9 +153,9 @@ void Block::Draw(Point origin) const
 {
 	Rect r;
 	int zk = MyGame::Zk;
-	for (int i = 0; i < m_size.x; i++)
+	for (int i = 0; i < m_pieces.size().x; i++)
 	{
-		for (int j = 0; j < m_size.y; j++)
+		for (int j = 0; j < m_pieces.size().y; j++)
 		{
 			r = Rect(origin + Point(m_pos.x + i * zk, m_pos.y + j * zk), zk, zk);
 			if (m_pieces[j][i] != PieceType::None)

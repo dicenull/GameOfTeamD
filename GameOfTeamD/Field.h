@@ -239,6 +239,8 @@ private:
 
 	EventTimer m_event_timer[2];
 
+	Grid<bool> m_is_not_check;
+
 private:
 		///<summary>
 		/// posから繋がっている同じ色のピース数を取得する

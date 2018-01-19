@@ -494,30 +494,32 @@ Array<Point> Field::connectedPieceCount(PlayerType p, Point pos)
 	auto & colors = m_colors[p];
 	auto color = colors[pos.y][pos.x];
 
+	m_is_not_check[pos.y][pos.x] = false;
+
 	colors[pos.y][pos.x] = PieceType::None;
 
-	if (pos.x + 1 < m_puzzle_width && colors[pos.y][pos.x + 1] == color)
+	if (pos.x + 1 < m_puzzle_width && colors[pos.y][pos.x + 1] == color && m_is_not_check[pos.y][pos.x + 1])
 	{
-		for (auto _p : (connectedPieceCount(p, Point(pos.x + 1, pos.y))))
+		for (auto _p : connectedPieceCount(p, Point(pos.x + 1, pos.y)))
 		{
 			points.push_back(_p);
 		}
 	}
-	if (pos.y + 1 < m_field_height && colors[pos.y + 1][pos.x] == color)
+	if (pos.y + 1 < m_field_height && colors[pos.y + 1][pos.x] == color && m_is_not_check[pos.y + 1][pos.x])
 	{
 		for (auto _p : connectedPieceCount(p, Point(pos.x, pos.y + 1)))
 		{
 			points.push_back(_p);
 		}
 	}
-	if (pos.x - 1 >= 0 && colors[pos.y][pos.x - 1] == color)
+	if (pos.x - 1 >= 0 && colors[pos.y][pos.x - 1] == color && m_is_not_check[pos.y][pos.x - 1])
 	{
 		for (auto _p : connectedPieceCount(p, Point(pos.x - 1, pos.y)))
 		{
 			points.push_back(_p);
 		}
 	}
-	if (pos.y - 1 >= 0 && colors[pos.y - 1][pos.x] == color)
+	if (pos.y - 1 >= 0 && colors[pos.y - 1][pos.x] == color && m_is_not_check[pos.y - 1][pos.x])
 	{
 		for (auto _p : connectedPieceCount(p, Point(pos.x, pos.y - 1)))
 		{
@@ -533,17 +535,18 @@ Array<Point> Field::connectedPieceCount(PlayerType p, Point pos)
 void Field::clearPieces()
 {
 	bool is_clear[2] = { false, false };
-	for (int i = 0; i < m_puzzle_width; i++)
+	for (auto p : { PlayerType::One, PlayerType::Two })
 	{
-		for (int j = 0; j < m_field_height; j++)
+		auto & colors = m_colors.at(p);
+		m_is_not_check = { Size(m_puzzle_width, m_field_height), true };
+		for (int i = 0; i < m_puzzle_width; i++)
 		{
-			for (auto p : { PlayerType::One, PlayerType::Two })
+			for (int j = 0; j < m_field_height; j++)
 			{
-				auto & colors = m_colors.at(p);
 				if (colors[j][i] != PieceType::None && colors[j][i] != PieceType::Black)
 				{
 					auto points = connectedPieceCount(p, Point(i, j));
-					
+
 					// 四つ以上つながったピースを消す
 					if (points.size() >= 4)
 					{
@@ -574,7 +577,6 @@ void Field::clearPieces()
 
 void Field::updateFieldState()
 {
-	Println(L"Update");
 	for (auto p : { PlayerType::One, PlayerType::Two })
 	{
 		auto & colors = m_colors.at(p);
@@ -640,7 +642,7 @@ void Field::createBlackBlock(PlayerType p, Array<Point> points)
 
 	for (auto p : points)
 	{
-		pieces[p.x - min.x][p.y - min.y] = PieceType::Black;
+		pieces[p.y - min.y][p.x - min.x] = PieceType::Black;
 	}
 
 	// 相手のプレイヤーのリストに黒ブロックを追加する
