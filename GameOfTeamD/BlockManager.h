@@ -33,7 +33,7 @@ public:
 	/// 管理しているブロックの情報を更新する
 	///</summary>
 	///<returns>ゲーム終了状態か</returns>
-	bool Update(Field & field, Player * players);
+	bool Update(Field & field, Player * players, Level level);
 
 	///<summary>
 	/// 管理しているブロックを描画する

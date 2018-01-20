@@ -21,7 +21,7 @@ void BlockManager::CreateBlock(PlayerType p, int height, Block block, const Fiel
 	m_blocks[p].push_back(block);
 }
 
-bool BlockManager::Update(Field & field, Player * players)
+bool BlockManager::Update(Field & field, Player * players, Level level)
 {
 	for (PlayerType p : {PlayerType::One, PlayerType::Two})
 	{
@@ -81,7 +81,7 @@ bool BlockManager::Update(Field & field, Player * players)
 	if (m_sw.ms() >= 750)
 	{
 		PlayerType p = RandomSelect({ PlayerType::One, PlayerType::Two });
-		Block block = RandomSelect({ BlockTemplate::RandomBlock(MyGame::GameLevel::Easy) });
+		Block block = RandomSelect({ BlockTemplate::RandomBlock(level) });
 		int max_v = field.HeightCount() - block.GetSize().y;
 		int height = Random<int>(0, max_v);
 
