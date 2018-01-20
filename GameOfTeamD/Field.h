@@ -143,6 +143,8 @@ public:
 	///<param name="p">どのプレイヤーがいるフィールドか</param>
 	Point BlockStartPos(PlayerType p) const;
 
+	Point PuzzleFieldAt(PlayerType p, int width, int height) const;
+
 	///<summary>
 	/// フィールドを反転するか設定する
 	///</summary>

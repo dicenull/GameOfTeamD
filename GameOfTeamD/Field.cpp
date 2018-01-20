@@ -116,15 +116,12 @@ void Field::Draw() const
 	{
 		for (int h = 0; h < m_field_height; h++)
 		{
-			Point pos = Point(MyGame::Zk * w, MyGame::Zk * h);
-			
 			for (auto p : { PlayerType::One, PlayerType::Two })
 			{
-				int tmp = (m_is_mirror.at(p) ? m_puzzle_width - 1 - w : w);
-				auto puzzle = m_puzzles.at(p)[h][tmp];
-				auto piece_type = m_colors.at(p)[h][tmp];
+				auto puzzle = m_puzzles.at(p)[h][w];
+				auto piece_type = m_colors.at(p)[h][w];
 				
-				puzzle.set(PuzzleOrigin(p) + pos, size);
+				puzzle.set(PuzzleFieldAt(p, w, h), size);
 
 				if (w < m_puzzle_width)
 				{
@@ -439,6 +436,19 @@ Point Field::BlockStartPos(PlayerType p) const
 	else
 	{
 		return SpaceEndPos(p) - Point(0, Height());
+	}
+}
+
+Point Field::PuzzleFieldAt(PlayerType p, int width, int height) const
+{
+	if (m_is_mirror.at(p))
+	{
+		return PuzzleOrigin(p) + Point((m_puzzle_width - 1) * MyGame::Zk, 0)
+			+ Point(-width * MyGame::Zk, height * MyGame::Zk);
+	}
+	else
+	{
+		return PuzzleOrigin(p) + Point(width * MyGame::Zk, height * MyGame::Zk);
 	}
 }
 
