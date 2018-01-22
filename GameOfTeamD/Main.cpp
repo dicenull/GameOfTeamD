@@ -178,9 +178,15 @@ void Main()
 {	
 	MyApp manager;
 
+	// シーンの追加
 	manager.add<Title>(L"Title");
 	manager.add<Game>(L"Game");
 	manager.add<Result>(L"Result");
+
+	// UI用フォントの登録
+	FontAsset::Register(L"UI_Small", 14, L"Meiryo UI", FontStyle::Regular);
+	FontAsset::Register(L"UI", 18, L"Meiryo UI", FontStyle::Regular);
+	FontAsset::Register(L"UI_Large", 28, L"Meiryo UI", FontStyle::Bold);
 
 	while (System::Update())
 	{
