@@ -43,7 +43,7 @@ public:
 			m_data->level = static_cast<Level>((static_cast<int>(m_data->level) + 1) % levels.size());
 		}
 
-		if (menu_boxes[L"Start"].leftClicked)
+		if (menu_boxes[L"Start"].leftClicked || Input::KeyEnter.clicked)
 		{
 			changeScene(L"Game");
 		}
