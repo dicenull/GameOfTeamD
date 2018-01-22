@@ -43,8 +43,13 @@ void Field::Update(Player * players)
 {
 	m_window = Window::Size();
 
+	for (auto p : { PlayerType::One, PlayerType::Two })
+	{
+		m_is_clear[p] = false;
+	}
+
 	// ピースのつながりを判定
-	clearPieces(players);
+	ClearPieces(players);
 
 	// ピースが消えていたらその分マスを詰める
 	for (auto & et : m_event_timer)
@@ -101,6 +106,11 @@ bool Field::SetBlock(PlayerType p, Block block)
 	}
 
 	return is_all_set;
+}
+
+bool Field::IsClear(PlayerType p)
+{
+	return m_is_clear[p];
 }
 
 void Field::Draw() const
@@ -509,7 +519,7 @@ Array<Point> Field::connectedPieceCount(PlayerType p, Point pos)
 
 	colors[pos.y][pos.x] = PieceType::None;
 
-	if (pos.x + 1 < m_puzzle_width && colors[pos.y][pos.x + 1] == color && m_is_not_check[pos.y][pos.x + 1])
+	if (pos.x + 1 < m_puzzle_width * 2 && colors[pos.y][pos.x + 1] == color && m_is_not_check[pos.y][pos.x + 1])
 	{
 		for (auto _p : connectedPieceCount(p, Point(pos.x + 1, pos.y)))
 		{
@@ -543,13 +553,12 @@ Array<Point> Field::connectedPieceCount(PlayerType p, Point pos)
 	return points;
 }
 
-void Field::clearPieces(Player * players)
+void Field::ClearPieces(Player * players)
 {
-	bool is_clear[2] = { false, false };
 	for (auto p : { PlayerType::One, PlayerType::Two })
 	{
 		auto & colors = m_colors.at(p);
-		m_is_not_check = { Size(m_puzzle_width, m_field_height), true };
+		m_is_not_check = { Size(m_puzzle_width * 2, m_field_height), true };
 		for (int i = 0; i < m_puzzle_width; i++)
 		{
 			for (int j = 0; j < m_field_height; j++)
@@ -572,7 +581,7 @@ void Field::clearPieces(Player * players)
 						// 相手に送る黒ブロックを生成する
 						createBlackBlock(p, points);
 
-						is_clear[static_cast<int>(p)] = true;
+						m_is_clear[p] = true;
 					}
 				}
 			}
@@ -582,7 +591,7 @@ void Field::clearPieces(Player * players)
 	// 空いた隙間を時間をおいて詰める
 	for (int i = 0; i < 2; i++)
 	{
-		if (is_clear[i])
+		if (m_is_clear[static_cast<PlayerType>(i)])
 		{
 			m_event_timer[i].start();
 		}
@@ -596,13 +605,13 @@ void Field::updateFieldState()
 		auto & colors = m_colors.at(p);
 		for (int h = 0; h < m_field_height; h++)
 		{
-			for (int w = 0; w < m_puzzle_width; w++)
+			for (int w = 0; w < m_puzzle_width * 2; w++)
 			{
 				if (colors[h][w] == PieceType::None)
 				{
 					// 1マス列を詰める
 					bool is_color = false;
-					for (int i = w + 1; i < m_puzzle_width; i++)
+					for (int i = w + 1; i < m_puzzle_width * 2; i++)
 					{
 						colors[h][i - 1] = colors[h][i];
 
@@ -611,7 +620,7 @@ void Field::updateFieldState()
 							is_color = true;
 						}
 					}
-					colors[h][m_puzzle_width - 1] = PieceType::None;
+					colors[h][m_puzzle_width * 2 - 1] = PieceType::None;
 
 					// 奥に色があったら同じ場所から再走査
 					if (is_color)

@@ -46,22 +46,31 @@ bool BlockManager::Update(Field & field, Player * players, Level level)
 				if (block.Intersects(players[static_cast<int>(p)].Shape))
 				{
 					// フィールドにブロックを奥詰めで入れる
-					if (!field.SetBlock(p, block))
-					{
-						// ブロックがフィールド外に出た場合GameOver
-						if (p == PlayerType::One)
-						{
-							players[static_cast<int>(PlayerType::Two)].SetWinner();
-						}
-						else
-						{
-							players[static_cast<int>(PlayerType::One)].SetWinner();
-						}
+					bool is_set = field.SetBlock(p, block);
 
-						return true;
-					}
 					// 移動してきたブロックは消去する
 					m_blocks[p].erase(m_blocks[p].begin() + i);
+
+					// フィールドを更新
+					field.ClearPieces(players);
+
+					if (!is_set)
+					{
+						if (!field.IsClear(p))
+						{
+							// ブロックがフィールド外に出た場合GameOver
+							if (p == PlayerType::One)
+							{
+								players[static_cast<int>(PlayerType::Two)].SetWinner();
+							}
+							else
+							{
+								players[static_cast<int>(PlayerType::One)].SetWinner();
+							}
+
+							return true;
+						}
+					}
 				}
 				else
 				{

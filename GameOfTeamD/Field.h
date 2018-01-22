@@ -49,10 +49,17 @@ public:
 	void Update(Player * players);
 
 	///<summary>
+	/// 4つ以上つながっているピースを判定し、消す
+	///</summary>
+	void ClearPieces(Player * players);
+
+	///<summary>
 	/// フィールドにブロックを追加する
 	///</summary>
 	///<returns>ブロックがフィールドに追加できたか</returns>
 	bool SetBlock(PlayerType p, Block block);
+
+	bool IsClear(PlayerType p);
 
 	///<summary>
 	/// フィールドの高さを取得する
@@ -241,6 +248,11 @@ private:
 	///</summary>
 	std::map<PlayerType, bool> m_is_mirror;
 
+	///<summary>
+	/// ピースを消したか
+	///</summary>
+	std::map<PlayerType, bool> m_is_clear;
+
 	EventTimer m_event_timer[2];
 
 	Grid<bool> m_is_not_check;
@@ -250,11 +262,6 @@ private:
 		/// posから繋がっている同じ色のピース数を取得する
 		///</summary>
 		Array<Point> connectedPieceCount(PlayerType p, Point pos);
-
-		///<summary>
-		/// 4つ以上つながっているピースを判定し、消す
-		///</summary>
-		void clearPieces(Player * players);
 
 		void updateFieldState();
 
