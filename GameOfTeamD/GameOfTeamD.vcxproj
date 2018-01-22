@@ -293,6 +293,7 @@
     <ClInclude Include="PieceType.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerLib.h" />
+    <ClInclude Include="UI.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
