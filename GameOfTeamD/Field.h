@@ -6,6 +6,7 @@
 #include "PlayerLib.h"
 #include "Action.h"
 #include "PieceType.h"
+#include "DashedLine.h"
 
 class Block;
 class Player;
@@ -256,6 +257,8 @@ private:
 	EventTimer m_event_timer[2];
 
 	Grid<bool> m_is_not_check;
+
+	int m_count = 0;
 
 private:
 		///<summary>

@@ -165,6 +165,7 @@
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="BlockManager.cpp" />
     <ClCompile Include="BlockTemplate.cpp" />
+    <ClCompile Include="DashedLine.cpp" />
     <ClCompile Include="Field.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="PieceType.cpp" />
@@ -288,6 +289,7 @@
     <ClInclude Include="BlockManager.h" />
     <ClInclude Include="BlockTemplate.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="DashedLine.h" />
     <ClInclude Include="Field.h" />
     <ClInclude Include="GameLib.h" />
     <ClInclude Include="PieceType.h" />

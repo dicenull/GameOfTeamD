@@ -64,6 +64,7 @@ void Field::Update(Player * players)
 		et.update();
 	}
 	
+	m_count = (m_count + 1) % (MyGame::Zk * 2);
 }
 
 bool Field::SetBlock(PlayerType p, Block block)
@@ -160,10 +161,19 @@ void Field::Draw() const
 		// パズルが移動してくるフィールドの補助線
 		for (int h = 1; h < m_field_height; h++)
 		{
-			Line(SpaceOrigin(p) + Point(0, h * MyGame::Zk), SpaceOrigin(p) + Point(SpaceWidth(), h * MyGame::Zk)).draw(1, l_color);
+			Point st{ SpaceOrigin(p) + Point(0, h * MyGame::Zk) };
+			int div = (m_window.x - Width()) / MyGame::Zk;
+
+			if (m_is_mirror.at(p))
+			{
+				DashedLine(st, st + Point(SpaceWidth(), 0), div, st + Point(m_count, 0)).Draw(l_color);
+			}
+			else
+			{
+				DashedLine(st + Point(SpaceWidth(), 0), st, div, st + Point(SpaceWidth() - m_count, 0)).Draw(l_color);
+			}
 		}
 	}
-
 }
 
 Field::~Field()
