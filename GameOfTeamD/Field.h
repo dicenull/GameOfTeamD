@@ -2,7 +2,6 @@
 
 #include <Siv3D.hpp>
 #include <map>
-#include <queue>
 #include "Block.h"
 #include "PlayerLib.h"
 #include "Action.h"
@@ -37,7 +36,7 @@ public:
 	~Field();
 
 public:
-	std::map<PlayerType, std::queue<std::pair<Block, int>>> BlackBlocks;
+	std::map<PlayerType, Array<std::pair<Block, int>>> BlackBlocks;
 
 public:
 	///<summary>

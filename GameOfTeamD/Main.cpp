@@ -75,7 +75,7 @@ public:
 		// プレイヤーの大きさを設定
 		for (auto& p : m_data->players)
 		{
-			p.Shape.r = MyGame::Zk / 2 - 1;
+			p.Shape.r = MyGame::Zk / 2 - 2;
 		}
 	}
 
@@ -122,8 +122,6 @@ public:
 
 	void draw() const override
 	{
-		m_data->field.Draw();
-
 		// タイムを描画
 		m_data->main_font(L"Time : ", m_data->timer.s(), L"[s]").drawCenter(Window::Center());
 		// プレイヤー1のスコアを描画
@@ -136,9 +134,9 @@ public:
 		// プレイヤーを描画
 		m_data->players[0].Shape.draw();
 		m_data->players[1].Shape.draw();
+
+		m_data->field.Draw();
 	}
-private:
-	int m_i = 0;
 };
 
 class Result : public MyApp::Scene

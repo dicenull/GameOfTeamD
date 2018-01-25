@@ -688,5 +688,5 @@ void Field::createBlackBlock(PlayerType p, Array<Point> points)
 		p = PlayerType::One;
 	}
 
-	BlackBlocks[p].push({ Block{pieces}, min.y });
+	BlackBlocks[p].push_back({ Block{pieces}, min.y });
 }

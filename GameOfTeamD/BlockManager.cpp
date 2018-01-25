@@ -33,12 +33,12 @@ bool BlockManager::Update(Field & field, Player * players, Level level)
 			Block & block = m_blocks[p][i];
 
 			// ブロックがフィールド内にあるか判定する
-			bool isin_field = true;
+			bool isin_field = false;
 			for (auto piece : block.GetAllPieces())
 			{
-				if (!field.IsInBlockField(p, piece))
+				if (field.IsInBlockField(p, piece))
 				{
-					isin_field = false;
+					isin_field = true;
 					break;
 				}
 			}
@@ -109,7 +109,9 @@ bool BlockManager::Update(Field & field, Player * players, Level level)
 		{
 			auto b_block = field.BlackBlocks[p].front();
 			CreateBlock(p, b_block.second, b_block.first, field);
-			field.BlackBlocks[p].pop();
+
+			// 初めの要素を削除
+			field.BlackBlocks[p].erase(field.BlackBlocks[p].begin());
 			m_bb_sw[p].restart();
 		}
 	}
