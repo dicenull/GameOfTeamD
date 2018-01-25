@@ -13,6 +13,7 @@ Field::Field(int32 field_height, int32 puzzle_width, int32 player_width, std::ma
 		m_puzzles[p].resize(Size(puzzle_width * 2, field_height));
 		m_is_mirror[p] = is_mirrors[p];
 		m_colors[p].resize(Size(puzzle_width * 2, field_height), PieceType::None);
+		BlackBlocks[p].clear();
 	}
 
 	for (auto & et : m_event_timer)

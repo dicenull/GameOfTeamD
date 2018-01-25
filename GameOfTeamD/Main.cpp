@@ -70,7 +70,12 @@ class Game : public MyApp::Scene
 public:
 	void init() override
 	{
-		m_data->timer.start();
+		m_data->timer.restart();
+
+		m_data->field = Field();
+		m_data->b_manager = BlockManager();
+		m_data->players[0] = { PlayerType::One, m_data->field.PlayerCenter(PlayerType::One) };
+		m_data->players[1] = { PlayerType::Two, m_data->field.PlayerCenter(PlayerType::Two) };
 
 		// プレイヤーの大きさを設定
 		for (auto& p : m_data->players)
@@ -144,7 +149,10 @@ class Result : public MyApp::Scene
 public :
 	void update() override
 	{
-
+		if (Input::KeyEnter.clicked)
+		{
+			changeScene(L"Title");
+		}
 	}
 
 	void draw() const override

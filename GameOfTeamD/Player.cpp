@@ -6,6 +6,7 @@ Player::Player(PlayerType p, Point pos)
 {
 	this->Shape.setPos(pos);
 	m_player_type = p;
+	m_score = 0;
 }
 
 
