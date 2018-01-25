@@ -6,6 +6,9 @@ BlockManager::BlockManager()
 {
 	m_blocks[PlayerType::One].clear();
 	m_blocks[PlayerType::Two].clear();
+
+	m_bb_sw[PlayerType::One] = Stopwatch(true);
+	m_bb_sw[PlayerType::Two] = Stopwatch(true);
 }
 
 BlockManager::~BlockManager()
@@ -87,7 +90,7 @@ bool BlockManager::Update(Field & field, Player * players, Level level)
 	}
 
 	// 新しいブロックを生成する
-	if (m_sw.ms() >= 750)
+	if (m_block_sw.ms() >= 750)
 	{
 		PlayerType p = RandomSelect({ PlayerType::One, PlayerType::Two });
 		Block block = RandomSelect({ BlockTemplate::RandomBlock(level) });
@@ -95,18 +98,20 @@ bool BlockManager::Update(Field & field, Player * players, Level level)
 		int height = Random<int>(0, max_v);
 
 		CreateBlock(p, height, block, field);
-		m_sw.restart();
+		m_block_sw.restart();
 	}
 	
 	// 黒ブロックを生成する
 	for (auto p : { PlayerType::One, PlayerType::Two })
 	{
-		for (auto b_block : field.BlackBlocks[p])
+		// 1000msごとに生成する
+		if (! field.BlackBlocks[p].empty() && m_bb_sw[p].ms() > 1000)
 		{
+			auto b_block = field.BlackBlocks[p].front();
 			CreateBlock(p, b_block.second, b_block.first, field);
+			field.BlackBlocks[p].pop();
+			m_bb_sw[p].restart();
 		}
-
-		field.BlackBlocks[p].clear();
 	}
 
 	return false;

@@ -46,6 +46,7 @@ private:
 	///</summary>
 	std::map<PlayerType, Array<Block>> m_blocks;
 
-	Stopwatch m_sw{ true };
+	Stopwatch m_block_sw{ true };
+	std::map<PlayerType, Stopwatch> m_bb_sw;
 };
 
