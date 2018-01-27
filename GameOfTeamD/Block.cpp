@@ -7,6 +7,7 @@ Block::Block()
 	m_pieces.fill(PieceType::None);
 	m_pos = Point();
 	m_is_black = false;
+	m_speed = 1;
 }
 
 Block::Block(Grid<PieceType> pieces)
@@ -23,6 +24,15 @@ Block::Block(Grid<PieceType> pieces)
 			m_is_black = false;
 			break;
 		}
+	}
+
+	if (m_is_black)
+	{
+		m_speed = 2;
+	}
+	else
+	{
+		m_speed = 1;
 	}
 }
 
@@ -118,6 +128,14 @@ void Block::SetPos(int height, const Point &pos)
 	m_height = height;
 }
 
+void Block::SetSpeed(int speed)
+{
+	if (speed > 0)
+	{
+		m_speed = speed;
+	}
+}
+
 int Block::GetHeight()
 {
 	return m_height;
@@ -130,19 +148,13 @@ Size Block::GetSize()
 
 void Block::Move(Action action)
 {
-	int speed = 1;
-	if (m_is_black)
-	{
-		speed = 2;
-	}
-
 	switch (action)
 	{
 	case Action::Left:
-		m_pos.moveBy(Point::Left * speed);
+		m_pos.moveBy(Point::Left * m_speed);
 		break;
 	case Action::Right:
-		m_pos.moveBy(Point::Right * speed);
+		m_pos.moveBy(Point::Right * m_speed);
 		break;
 	default:
 		break;

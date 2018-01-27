@@ -53,6 +53,12 @@ public:
 	///</summary>
 	void SetPos(int height, const Point &pos);
 
+	/// <summary>
+	/// ブロックの落ちるスピードを設定する
+	/// </summary>
+	/// <param name="speed">速度</param>
+	void SetSpeed(int speed);
+
 	///<summary>
 	/// フィールド内のブロックのある高さを取得する
 	///</summary>
@@ -91,6 +97,7 @@ private:
 
 	int m_height;
 	bool m_is_black;
+	int m_speed;
 };
 
 template<class Shape>
