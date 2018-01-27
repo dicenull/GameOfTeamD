@@ -65,7 +65,7 @@ void Field::Update(Player * players)
 		et.update();
 	}
 	
-	m_count = (m_count + 1) % (MyGame::Zk * 2);
+	m_count = (m_count + 1) % (MyGame::Zk * 2 + 1);
 }
 
 bool Field::SetBlock(PlayerType p, Block block)
@@ -178,7 +178,7 @@ void Field::Draw() const
 		for (int h = 1; h < m_field_height; h++)
 		{
 			Point st{ SpaceOrigin(p) + Point(0, h * MyGame::Zk) };
-			int div = (m_window.x - Width()) / MyGame::Zk;
+			int div = SpaceWidth() / MyGame::Zk;
 
 			if (m_is_mirror.at(p))
 			{
