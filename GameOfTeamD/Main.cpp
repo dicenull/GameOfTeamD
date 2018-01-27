@@ -105,10 +105,10 @@ public:
 		}
 
 		// プレイヤー1の操作
-		if (Input::KeyRight.pressed || Gamepad(0).button(4).pressed) m_data->players[0].Move(Action::Right, m_data->field);
-		if (Input::KeyUp.pressed || Gamepad(0).button(3).pressed) m_data->players[0].Move(Action::Up, m_data->field);
-		if (Input::KeyLeft.pressed || Gamepad(0).button(1).pressed) m_data->players[0].Move(Action::Left, m_data->field);
-		if (Input::KeyDown.pressed || Gamepad(0).button(2).pressed) m_data->players[0].Move(Action::Down, m_data->field);
+		if (Input::KeyRight.pressed || Gamepad(0).povRight.pressed) m_data->players[0].Move(Action::Right, m_data->field);
+		if (Input::KeyUp.pressed || Gamepad(0).povForward.pressed) m_data->players[0].Move(Action::Up, m_data->field);
+		if (Input::KeyLeft.pressed || Gamepad(0).povLeft.pressed) m_data->players[0].Move(Action::Left, m_data->field);
+		if (Input::KeyDown.pressed || Gamepad(0).povBackward.pressed) m_data->players[0].Move(Action::Down, m_data->field);
 
 		// プレイヤー2の操作
 		if (Input::KeyD.pressed) m_data->players[1].Move(Action::Right, m_data->field);
