@@ -40,6 +40,12 @@ public:
 	///</summary>
 	void DrawBlocks() const;
 
+	/// <summary>
+	/// 通常ブロックのスピード
+	/// </summary>
+	/// <param name="speed">設定するスピード</param>
+	void SetBlocksSpeed(int speed);
+
 private:
 	///<summary>
 	/// プレイヤーごとのブロック
@@ -48,5 +54,7 @@ private:
 
 	Stopwatch m_block_sw{ true };
 	std::map<PlayerType, Stopwatch> m_bb_sw;
+
+	int m_blocks_speed = 1;
 };
 

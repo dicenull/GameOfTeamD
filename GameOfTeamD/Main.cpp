@@ -116,6 +116,9 @@ public:
 		if (Input::KeyA.pressed) m_data->players[1].Move(Action::Left, m_data->field);
 		if (Input::KeyS.pressed) m_data->players[1].Move(Action::Down, m_data->field);
 
+		// 一定時間ごとにブロックの速度を早くする
+		m_data->b_manager.SetBlocksSpeed(m_data->timer.s() / m_speed_up_count + 1);
+
 		// ブロックを動かす
 		if (m_data->b_manager.Update(m_data->field, m_data->players, m_data->level))
 		{
@@ -142,6 +145,9 @@ public:
 
 		m_data->field.Draw();
 	}
+
+private:
+	int m_speed_up_count = 60;
 };
 
 class Result : public MyApp::Scene

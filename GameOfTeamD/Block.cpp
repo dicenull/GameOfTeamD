@@ -26,14 +26,7 @@ Block::Block(Grid<PieceType> pieces)
 		}
 	}
 
-	if (m_is_black)
-	{
-		m_speed = 2;
-	}
-	else
-	{
-		m_speed = 1;
-	}
+	m_speed = 1;
 }
 
 Block::~Block()
@@ -148,13 +141,19 @@ Size Block::GetSize()
 
 void Block::Move(Action action)
 {
+	int speed = m_speed;
+	if (m_is_black)
+	{
+		speed++;
+	}
+
 	switch (action)
 	{
 	case Action::Left:
-		m_pos.moveBy(Point::Left * m_speed);
+		m_pos.moveBy(Point::Left * speed);
 		break;
 	case Action::Right:
-		m_pos.moveBy(Point::Right * m_speed);
+		m_pos.moveBy(Point::Right * speed);
 		break;
 	default:
 		break;

@@ -97,6 +97,8 @@ bool BlockManager::Update(Field & field, Player * players, Level level)
 		int max_v = field.HeightCount() - block.GetSize().y;
 		int height = Random<int>(0, max_v);
 
+		block.SetSpeed(m_blocks_speed);
+
 		CreateBlock(p, height, block, field);
 		m_block_sw.restart();
 	}
@@ -108,6 +110,7 @@ bool BlockManager::Update(Field & field, Player * players, Level level)
 		if (! field.BlackBlocks[p].empty() && m_bb_sw[p].ms() > 1000)
 		{
 			auto b_block = field.BlackBlocks[p].front();
+			b_block.first.SetSpeed(m_blocks_speed);
 			CreateBlock(p, b_block.second, b_block.first, field);
 
 			// ‰‚ß‚Ì—v‘f‚ðíœ
@@ -129,5 +132,13 @@ void BlockManager::DrawBlocks() const
 	for (auto block : m_blocks.at(PlayerType::Two))
 	{
 		block.Draw(Point::Zero);
+	}
+}
+
+void BlockManager::SetBlocksSpeed(int speed)
+{
+	if (speed > 0)
+	{
+		m_blocks_speed = speed;
 	}
 }
