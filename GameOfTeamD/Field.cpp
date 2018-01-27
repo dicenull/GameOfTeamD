@@ -150,11 +150,26 @@ void Field::Draw() const
 		}
 	}
 
+	// スコア表示部とフィールドの境界線
+	Point plus = Point(0, 15);
+	Point w1 = Point(MyGame::Zk * 5, 0);
+	Point w2 = Point(MyGame::Zk * 7, 0);
+	// Player 1
+	Point p1 = LeftBorder(PlayerType::Two) + w1 - plus;
+	Point p2 = LeftBorder(PlayerType::One) + w2;
+	Line(LeftBorder(PlayerType::Two) - plus, p1).draw(2.0, f_color);
+	Line(p1, p2).draw(2.0, f_color);
+	Line(p2, RightBorder(PlayerType::One)).draw(2.0, f_color);
+
+	// Player 2
+	p1 = RightBorder(PlayerType::One) - w1 + plus;
+	p2 = RightBorder(PlayerType::Two) - w2;
+	Line(RightBorder(PlayerType::One) + plus, p1).draw(2.0, f_color);
+	Line(p1, p2).draw(2.0, f_color);
+	Line(p2, LeftBorder(PlayerType::Two)).draw(2.0, f_color);
+
 	for (auto p : { PlayerType::One, PlayerType::Two })
 	{
-
-		// スコア表示部とフィールドの境界線
-		Line(LeftBorder(p), RightBorder(p)).draw(3.0, f_color);
 		
 		// プレイヤーフィールドの境界線
 		Line(PlayerTopBorder(p), PlayerTopBorder(p) + Point(0, Height())).draw(2.0, p_color);

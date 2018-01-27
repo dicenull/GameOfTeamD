@@ -133,9 +133,9 @@ public:
 		// タイムを描画
 		m_data->main_font(L"Time : ", m_data->timer.s(), L"[s]").drawCenter(Window::Center());
 		// プレイヤー1のスコアを描画
-		m_data->main_font(m_data->players[0].Score()).drawCenter(Point(Window::Center().x / 5.0, Window::Center().y));
+		m_data->main_font(m_data->players[0].Score()).drawCenter(Point(Window::Center().x / 10.0, Window::Center().y));
 		// プレイヤー2のスコアを描画
-		m_data->main_font(m_data->players[1].Score()).drawCenter(Point(Window::Size().x - Window::Size().x / 5.0, Window::Center().y));
+		m_data->main_font(m_data->players[1].Score()).drawCenter(Point(Window::Size().x - Window::Size().x / 10.0, Window::Center().y));
 
 		m_data->b_manager.DrawBlocks();
 
@@ -178,9 +178,9 @@ public :
 		// タイムを描画
 		m_data->small_font(L"Time : ", m_data->timer.s(), L"[s]").drawCenter(Window::Center() + Point(0, 50));
 		// プレイヤー1のスコアを描画
-		m_data->main_font(m_data->players[0].Score()).drawCenter(Point(Window::Center().x / 5.0, Window::Center().y));
+		m_data->main_font(m_data->players[0].Score()).drawCenter(Point(Window::Center().x / 10.0, Window::Center().y));
 		// プレイヤー2のスコアを描画
-		m_data->main_font(m_data->players[1].Score()).drawCenter(Point(Window::Size().x - Window::Size().x / 5.0, Window::Center().y));
+		m_data->main_font(m_data->players[1].Score()).drawCenter(Point(Window::Size().x - Window::Size().x / 10.0, Window::Center().y));
 
 		m_data->field.Draw();
 	}
