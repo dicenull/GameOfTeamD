@@ -37,7 +37,6 @@ public:
 
 		buttons[L"Start"] = { {origin, size}, L"Start", Palette::White };
 		buttons[L"Level"] = { {origin + Point(0, size.y * 1.5), size}, levels[static_cast<int>(m_data->level)], Palette::White };
-		buttons[L"Setting"] = { {origin + Point(0, size.y * 3.0), size}, L"Setting", Palette::White };
 	}
 
 	void update() override
@@ -57,11 +56,6 @@ public:
 		if (buttons[L"Start"].isClicked() || Input::KeyEnter.clicked)
 		{
 			changeScene(L"Game");
-		}
-
-		if (buttons[L"Setting"].isClicked())
-		{
-			changeScene(L"Setting");
 		}
 	}
 
