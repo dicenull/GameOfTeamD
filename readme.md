@@ -45,7 +45,7 @@
 どちらのプレイヤーのフィールドが端以上まで敷き詰められたらゲーム終了です。  
 Enterキーを押すとタイトルに戻ります。  
 Escキーを押すとゲームが終了します。  
-![main2](https://github.com/Eulerd/GameOfTeamD/blob/master/media/main1.PNG)  
+![main2](https://github.com/Eulerd/GameOfTeamD/blob/master/media/main2.PNG)  
 
 
 ## 製作チーム
