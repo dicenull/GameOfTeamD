@@ -39,13 +39,13 @@
 画面中央左 : プレイヤー1が相手に送ったピースの個数  
 画面中央右 : プレイヤー2が相手に送ったピースの個数  
 画面中央 : ゲーム開始からの経過時間  
-![main1](https://github.com/Eulerd/GameOfTeamD/blob/master/media/main1.gif)  
+![main1](https://github.com/Eulerd/GameOfTeamD/blob/master/media/main1.png)  
 
 3. ゲーム終了
 どちらのプレイヤーのフィールドが端以上まで敷き詰められたらゲーム終了です。  
 Enterキーを押すとタイトルに戻ります。  
 Escキーを押すとゲームが終了します。  
-![main2](https://github.com/Eulerd/GameOfTeamD/blob/master/media/main1.gif)  
+![main2](https://github.com/Eulerd/GameOfTeamD/blob/master/media/main1.PNG)  
 
 
 ## 製作チーム
