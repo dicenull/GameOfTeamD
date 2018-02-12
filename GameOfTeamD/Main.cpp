@@ -6,6 +6,7 @@
 #include "Block.h"
 #include "BlockManager.h"
 #include "Action.h"
+#include "UI.hpp"
 
 struct CommonData
 {
@@ -32,37 +33,51 @@ public:
 	void init() override
 	{
 		Size size = m_data->main_font(L" Normal ").region().size;
-		menu_boxes[L"Level"] = { Window::Center() + Point(-size.x / 2, size.y * 2), size, 10 };
-		menu_boxes[L"Start"] = { Window::Center() + Point(-size.x / 2, 0), size, 10 };
+		Point origin = Window::Center() + Point(-size.x / 2, 0);
+
+		buttons[L"Start"] = { {origin, size}, L"Start", Palette::White };
+		buttons[L"Level"] = { {origin + Point(0, size.y * 1.5), size}, levels[static_cast<int>(m_data->level)], Palette::White };
+		buttons[L"Setting"] = { {origin + Point(0, size.y * 3.0), size}, L"Setting", Palette::White };
 	}
 
-	void update() override 
+	void update() override
 	{
-		if (menu_boxes[L"Level"].leftClicked)
+		for (auto & button : buttons)
 		{
-			m_data->level = static_cast<Level>((static_cast<int>(m_data->level) + 1) % levels.size());
+			button.second.update();
 		}
 
-		if (menu_boxes[L"Start"].leftClicked || Input::KeyEnter.clicked)
+		if (buttons[L"Level"].isClicked())
+		{
+			// 難易度を変更
+			m_data->level = static_cast<Level>((static_cast<int>(m_data->level) + 1) % levels.size());
+			buttons[L"Level"].setText(levels[static_cast<int>(m_data->level)]);
+		}
+
+		if (buttons[L"Start"].isClicked() || Input::KeyEnter.clicked)
 		{
 			changeScene(L"Game");
+		}
+
+		if (buttons[L"Setting"].isClicked())
+		{
+			changeScene(L"Setting");
 		}
 	}
 
 	void draw() const override
 	{
 		m_data->main_font(L"お宅の庭敷き詰めます").drawCenter(Window::Center() - Point(0, Window::Center().y / 3));
-		for (auto menu : menu_boxes)
+
+		for (auto button : buttons)
 		{
-			menu.second.draw();
+			button.second.draw();
 		}
-		m_data->main_font(levels[static_cast<int>(m_data->level)]).drawAt(menu_boxes.at(L"Level").center, Palette::Black);
-		m_data->main_font(L"Start").drawAt(menu_boxes.at(L"Start").center, Palette::Blue);
 	}
 
 private:
 	Array<String> levels = { L"Easy", L"Normal", L"Hard" };
-	std::map<String, RoundRect> menu_boxes;
+	std::map<String, UI::Button> buttons;
 };
 
 class Game : public MyApp::Scene

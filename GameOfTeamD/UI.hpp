@@ -5,7 +5,7 @@
 
 #include <Siv3D.hpp>
 
-namespace tgpUI
+namespace UI
 {
 	class ToggleSwitch
 	{
@@ -126,6 +126,13 @@ namespace tgpUI
 		bool m_mouseOver = false;
 
 	public:
+
+		Button()
+		{
+			m_rect = RoundRect(Rect(), 5);
+			m_text = L"";
+			m_bgColor = Palette::White;
+		}
 
 		Button(const Rect& rect, const String& text, const Color& background)
 		{
